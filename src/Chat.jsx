@@ -20,33 +20,65 @@ import {
     ]);
     const [typing, setTyping] = useState(false);
   
+    const email = new URLSearchParams(window.location.search).get("email") || "";
+  console.log("custommmmmerrrrrrrrr emailllll======>",email)
     const handleSend = async (userMessage) => {
+      if (!email) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            message: "🔒 Tu dois être connecté à ton compte Shopify pour utiliser ce service.",
+            sender: "ChatGPT"
+          }
+        ]);
+        return;
+      }
+  
       const newMessage = {
         message: userMessage,
         sender: "user"
       };
+
   
       const newMessages = [...messages, newMessage];
       setMessages(newMessages);
       setTyping(true);
   
-      const response = await fetch("https://mawa-backend.vercel.app/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages.map((m) => ({
-            role: m.sender === "ChatGPT" ? "assistant" : "user",
-            content: m.message
-          }))
-        })
-      });
+      try {
+        const response = await fetch("https://mawa-backend.vercel.app/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            messages: newMessages.map((m) => ({
+              role: m.sender === "ChatGPT" ? "assistant" : "user",
+              content: m.message
+            }))
+          })
+        });
   
-      const data = await response.json();
-      setMessages([
-        ...newMessages,
-        { message: data.reply, sender: "ChatGPT" }
-      ]);
-      setTyping(false);
+        const data = await response.json();
+  
+        if (response.status === 429) {
+          setMessages((prev) => [
+            ...prev,
+            { message: data.error || "⛔ Limite de messages atteinte.", sender: "ChatGPT" }
+          ]);
+        } else {
+          setMessages([
+            ...newMessages,
+            { message: data.reply, sender: "ChatGPT" }
+          ]);
+        }
+      } catch (error) {
+        setMessages((prev) => [
+          ...prev,
+          { message: "❌ Une erreur est survenue. Réessaie plus tard.", sender: "ChatGPT" }
+        ]);
+        console.error("Erreur lors de l'envoi du message:", error);
+      } finally {
+        setTyping(false);
+      }
     };
   
     return (
