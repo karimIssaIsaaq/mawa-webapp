@@ -43,7 +43,7 @@
 .chatbox-container .cs-chat-container,
 .chatbox-container .cs-message-list {
   height: auto !important;
-  max-height: 100vh;
+  max-height: 80vh;
 }
 
 /* 5. MessageList : auto-height et scroll si trop grand */
