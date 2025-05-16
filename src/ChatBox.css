@@ -29,8 +29,8 @@
 /* 3. Conteneur principal du chat */
 .chatbox-container {
   width: 100%;
-  max-width: 600px;
-  background: var(--cs-secondary);
+  max-width: 70vw;
+  background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
   overflow: hidden;
