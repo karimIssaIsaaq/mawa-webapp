@@ -1,8 +1,8 @@
 /* src/ChatBox.css */
 
-/* 1. Variables : couleurs + tailles clampées */
+/* 1. Variables : palette + dimensions */
 :root {
-  /* palette sérieuse */
+  /* Couleurs */
   --cs-bg: #ffffff;
   --cs-assistant: #2c2c2c;
   --cs-user: #1abc9c;
@@ -12,30 +12,31 @@
   --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
   --cs-font: "Roboto", sans-serif;
 
-  /* chat dimensions */
+  /* Tailles chat */
   --chat-width: clamp(280px, 90vw, 380px);
-  --chat-height: clamp(300px, 50vh, 600px);
-  --chat-height-mobile: 100vh;
+  --chat-height-desktop: clamp(300px, 50vh, 600px);
+  /* Hauteur mobile réduite : min 200px, max 40vh, ideal 30vh */
+  --chat-height-mobile: clamp(200px, 30vh, 40vh);
 }
 
-/* reset */
+/* 2. Reset global */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* 2. Wrapper centré dans le flow de la page */
+/* 3. Wrapper centré */
 .chatbox-wrapper {
   width: var(--chat-width);
-  margin: 0 auto;             /* centre horizontalement */
-  height: var(--chat-height);
+  margin: 0 auto;                    /* centre horizontalement */
+  height: var(--chat-height-desktop);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 3. Bloc chat en flex-col */
+/* 4. Container chat */
 .chatbox-container {
   display: flex;
   flex-direction: column;
@@ -47,7 +48,7 @@
   overflow: hidden;
 }
 
-/* 4. Zone des messages – **scroll interne** */
+/* 5. Zone messages – scroll interne */
 .messages-area {
   flex: 1;
   overflow-y: auto;
@@ -57,7 +58,7 @@
   background: var(--cs-bg);
 }
 
-/* 5. Bulles (sur-override Chat UI Kit) */
+/* 6. Bulles (override Chat UI Kit) */
 .chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-assistant) !important;
   color: var(--cs-text-light) !important;
@@ -74,7 +75,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* 6. TypingIndicator spacing */
+/* 7. TypingIndicator spacing */
 .typing-indicator {
   margin-bottom: 0.5rem;
   font-style: italic;
@@ -82,7 +83,7 @@
   font-family: var(--cs-font);
 }
 
-/* 7. Input collé en bas */
+/* 8. Input collé en bas */
 .input-area {
   flex-shrink: 0;
   border-top: 1px solid var(--cs-border);
@@ -90,17 +91,16 @@
   padding: 0.5rem;
 }
 
-/* 8. Adaptation mobile */
+/* 9. Mobile : block beaucoup plus petit */
 @media (max-width: 768px) {
   .chatbox-wrapper {
-    width: 100%;
-    height: var(--chat-height-mobile);
-  }
-  .chatbox-container {
-    border-radius: 0;
+    width: 100%;                       /* plein écran horizontal */
+    height: var(--chat-height-mobile); /* hauteur réduite */
+    margin: 0 auto;                    /* centré horizontalement */
+    border-radius: 0;                  /* coins carrés si tu veux */
   }
   .messages-area {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   .input-area {
     padding: 0.25rem;
