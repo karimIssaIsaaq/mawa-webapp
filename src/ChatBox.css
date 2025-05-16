@@ -1,6 +1,6 @@
 /* src/ChatBox.css */
 
-/* 1. Palette sérieuse */
+/* 1. Thème */
 :root {
   --cs-bg: #ffffff;
   --cs-assistant: #2c2c2c;
@@ -17,58 +17,59 @@
   padding: 0;
 }
 
-/* 2. Wrapper fixe & centré dans le viewport */
+/* 2. Wrapper fixe en bas, centré, sans marge haute */
 .chatbox-wrapper {
   position: fixed;
-  inset: 0;                   /* top:0; right:0; bottom:0; left:0; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--cs-bg);
-  padding: 1rem;
+  bottom: 1rem;              /* ← 1rem au-dessus du bas du viewport */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 350px;          /* largeur max sur desktop */
+  height: 50vh;              /* hauteur du bloc */
+  z-index: 1000;
+  padding: 0;                /* plus de padding global */
 }
 
-/* 3. Container de chat : taille réduite */
+/* 3. Container interne full-size */
 .chatbox-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 350px;           /* largeur max desktop */
-  height: 60vh;               /* hauteur réduite desktop */
+  height: 100%;
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;           /* masque tout hors du bloc */
+  overflow: hidden;          /* masque tout hors du container */
 }
 
-/* 4. Zone des messages – **seule** zone scrollable */
+/* 4. Seule cette zone scroll */
 .messages-container {
-  flex: 1;                    /* prend tout l’espace libre */
-  overflow-y: auto;           /* scroll interne */
-  scroll-behavior: smooth;    /* scroll fluide */
-  -webkit-overflow-scrolling: touch; /* momentum iOS */
-  padding: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.75rem;
   background: var(--cs-bg);
 }
 
-/* 5. Bulles messages (override Chat UI Kit) */
+/* 5. Stylisation des bulles */
 .chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-assistant) !important;
   color: var(--cs-text-light) !important;
   border-radius: var(--cs-radius) var(--cs-radius) 2px var(--cs-radius);
   font-family: var(--cs-font);
   box-shadow: var(--cs-shadow);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 .chatbox-container .cs-message--user .cs-text-bubble {
   background: var(--cs-user) !important;
   color: #fff !important;
   border-radius: var(--cs-radius) var(--cs-radius) var(--cs-radius) 2px;
   font-family: var(--cs-font);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
-/* 6. TypingIndicator spacing */
+/* 6. TypingIndicator */
 .typing-indicator {
   margin-bottom: 0.5rem;
   font-style: italic;
@@ -84,15 +85,14 @@
   padding: 0.5rem;
 }
 
-/* 8. Responsive mobile */
+/* 8. Adaptation mobile */
 @media (max-width: 768px) {
-  .chatbox-container {
-    max-width: 100%;
-    height: 70vh;             /* un peu plus grand sur mobile */
-    border-radius: var(--cs-radius);
+  .chatbox-wrapper {
+    bottom: 0;              /* touche bien le bas */
+    height: 60vh;           /* un peu plus haut */
   }
   .messages-container {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   .input-container {
     padding: 0.25rem;
