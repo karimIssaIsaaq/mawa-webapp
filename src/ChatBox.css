@@ -1,18 +1,101 @@
 /* src/ChatBox.css */
 
-/* 1. Full-height parent so margin-top works */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+/* full-height app, centered */
+.chat-app {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f2f5;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-/* 2. Bubble styles matching the theme */
-.cs-message--assistant .cs-text-bubble {
-  background: linear-gradient(135deg, #6C63FF, #3d84a8) !important;
-  color: #fff !important;
+/* chat container: grid with messages scroll and fixed input */
+.chat-window {
+  width: clamp(300px, 90vw, 600px);
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
-.cs-message--user .cs-text-bubble {
-  background: linear-gradient(135deg, #ff758c, #ff7eb3) !important;
-  color: #fff !important;
+
+/* scrollable messages area */
+.messages {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* individual bubbles */
+.message {
+  margin-bottom: 1rem;
+  max-width: 80%;
+  padding: 0.75rem;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.message.user {
+  margin-left: auto;
+  background: #DCF8C6;
+  border-radius: 18px 18px 2px 18px;
+}
+
+.message.bot {
+  margin-right: auto;
+  background: #E5E5EA;
+  border-radius: 18px 18px 18px 2px;
+  color: #000;
+}
+
+/* input form fixed at bottom of chat-window */
+.input-form {
+  display: flex;
+  padding: 0.5rem;
+  border-top: 1px solid #ddd;
+  background: #fff;
+}
+
+.input-form textarea {
+  flex: 1;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  background: #f9f9f9;
+}
+
+.input-form textarea:focus {
+  outline: none;
+  background: #fff;
+}
+
+.input-form button {
+  margin-left: 0.5rem;
+  border: none;
+  background: #0084FF;
+  color: #fff;
+  padding: 0 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* responsive tweaks for mobile */
+@media (max-width: 600px) {
+  .chat-window {
+    width: 100%;
+    height: 80vh;
+  }
+  .input-form textarea {
+    padding: 0.5rem;
+  }
+  .input-form button {
+    padding: 0 0.75rem;
+  }
 }
