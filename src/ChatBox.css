@@ -1,36 +1,17 @@
 /* src/ChatBox.css */
 
-/* 1. Variables : largeur responsive du chat */
-:root {
-  --chat-wrapper-width: clamp(280px, 90vw, 380px);
-}
-
-/* 2. Reset minimal + full-height sur html/body */
-html,
-body {
+/* 1. Full-height & centering du body pour que margin:auto fonctionne */
+html, body {
   height: 100%;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
-/* 3. Wrapper du chat (MainContainer) */
-.chat-wrapper {
-  width: var(--chat-wrapper-width);
-  height: 100vh;      /* occupe tout l’écran verticalement */
-  margin: 0 auto;     /* centré horizontalement sur desktop */
+/* 2. Surcharges bulles pour jouer avec ton thème */
+.cs-message--assistant .cs-text-bubble {
+  background: linear-gradient(135deg, #6C63FF, #3d84a8) !important;
+  color: #fff !important;
 }
-
-/* 4. Le Chat UI Kit (MainContainer, ChatContainer, etc.) */
-/*    Les styles de @chatscope/chat-ui-kit-styles sont importés */
-/*    dans ton JS avec :                          */
-/*    import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css"; */
-/*    Tu n’as donc pas besoin de les dupliquer ici. */
-
-/* 5. Responsive mobile : plein écran horizontal */
-@media (max-width: 768px) {
-  .chat-wrapper {
-    width: 100%;
-    margin: 0;
-  }
+.cs-message--user .cs-text-bubble {
+  background: linear-gradient(135deg, #ff758c, #ff7eb3) !important;
+  color: #fff !important;
 }
