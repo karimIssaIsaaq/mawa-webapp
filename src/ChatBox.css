@@ -1,4 +1,6 @@
-/* 1. Thème */
+/* src/ChatBox.css */
+
+/* 1. Palette sérieuse */
 :root {
   --cs-bg: #ffffff;
   --cs-assistant: #2c2c2c;
@@ -6,45 +8,50 @@
   --cs-text-light: #e0e0e0;
   --cs-border: #e5e7eb;
   --cs-radius: 10px;
-  --cs-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
   --cs-font: 'Roboto', sans-serif;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 /* 2. Wrapper fixe & centré dans le viewport */
 .chatbox-wrapper {
   position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
+  inset: 0;                   /* top:0; right:0; bottom:0; left:0; */
   display: flex;
   justify-content: center;
   align-items: center;
   background: var(--cs-bg);
+  padding: 1rem;
 }
 
-/* 3. Container de chat de taille fixe */
+/* 3. Container de chat : taille réduite */
 .chatbox-container {
   width: 100%;
-  max-width: 400px;    /* desktop */
-  height: 80vh;        /* desktop height */
+  max-width: 350px;           /* largeur max desktop */
+  height: 60vh;               /* hauteur réduite desktop */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
   display: flex;
   flex-direction: column;
-  overflow: hidden;    /* masque tout hors du container */
+  overflow: hidden;           /* masque tout hors du bloc */
 }
 
-/* 4. Zone des messages – **scroll interne uniquement ici** */
+/* 4. Zone des messages – **seule** zone scrollable */
 .messages-container {
-  flex: 1;                   /* prend tout l’espace restant */
-  overflow-y: auto;          /* **seule** zone scrollable */
-  scroll-behavior: smooth;   /* scroll fluide */
+  flex: 1;                    /* prend tout l’espace libre */
+  overflow-y: auto;           /* scroll interne */
+  scroll-behavior: smooth;    /* scroll fluide */
   -webkit-overflow-scrolling: touch; /* momentum iOS */
   padding: 1rem;
   background: var(--cs-bg);
 }
 
-/* 5. Bulles (custumisation Chat UI Kit) */
+/* 5. Bulles messages (override Chat UI Kit) */
 .chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-assistant) !important;
   color: var(--cs-text-light) !important;
@@ -61,14 +68,12 @@
   margin-bottom: 0.75rem;
 }
 
-/* 6. Indicator & ancre spacing */
+/* 6. TypingIndicator spacing */
 .typing-indicator {
   margin-bottom: 0.5rem;
   font-style: italic;
   color: var(--cs-text-light);
-}
-.messages-container > div[ref] {
-  height: 1px; /* ancre invisible */
+  font-family: var(--cs-font);
 }
 
 /* 7. Input collé en bas du container */
@@ -83,8 +88,8 @@
 @media (max-width: 768px) {
   .chatbox-container {
     max-width: 100%;
-    height: 100vh;    /* mobile full-screen */
-    border-radius: 0;
+    height: 70vh;             /* un peu plus grand sur mobile */
+    border-radius: var(--cs-radius);
   }
   .messages-container {
     padding: 0.75rem;
