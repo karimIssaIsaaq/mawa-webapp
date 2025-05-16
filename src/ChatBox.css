@@ -1,6 +1,6 @@
 /* src/ChatBox.css */
 
-/* 1. Variables de thème */
+/* 1. Variables de thème (inchangées) */
 :root {
   --cs-bg: #FFFFFF;
   --cs-secondary: #2C2C2C;
@@ -13,23 +13,24 @@
   --cs-font: 'Roboto', sans-serif;
 }
 
-/* 2. Wrapper plein écran */
+/* 2. Wrapper : centre le container dans la fenêtre */
 .chatbox-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: stretch;
+  justify-content: center;    /* centre horizontalement */
+  align-items: center;        /* centre verticalement */
   width: 100vw;
   height: 100vh;
   background: var(--cs-bg);
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* 3. Conteneur principal */
+/* 3. Container : taille fixe “desktop”, scroll interne pour les messages */
 .chatbox-container {
-  flex: 1;
-  max-width: 70vw;
-  height: 100%;
+  width: 100%;
+  max-width: 400px;            /* limite la largeur sur desktop */
+  height: 80vh;                /* hauteur “raisonnable” sur desktop */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
@@ -44,19 +45,19 @@
   display: flex !important;
   flex-direction: column !important;
   flex: 1 1 auto !important;
-  min-height: 0; /* CRUCIAL pour permettre à l’enfant de scroller */
+  min-height: 0;               /* absolument nécessaire pour que scroll interne fonctionne */
 }
 
-/* 5. Zone de messages scrollable */
+/* 5. MessageList scrollable */
 .cs-message-list {
   flex: 1 1 auto;
-  min-height: 0;        /* CRUCIAL pour que overflow-y fonctionne */
+  min-height: 0;               /* idem */
   padding: 1rem;
-  overflow-y: auto;
+  overflow-y: auto;            /* active le scroll interne */
   background: var(--cs-bg);
 }
 
-/* 6. Bulles */
+/* 6. Bulles de messages */
 .cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
@@ -74,7 +75,7 @@
   line-height: 1.4;
 }
 
-/* 7. Input fixé en bas */
+/* 7. Zone de saisie fixe en bas */
 .cs-message-input {
   flex-shrink: 0;
   padding: 0.75rem;
@@ -112,7 +113,7 @@
   transform: scale(1.05);
 }
 
-/* 9. Typing indicator */
+/* 9. Indicateur de saisie */
 .cs-typing-indicator {
   margin-left: 1rem;
   font-family: var(--cs-font);
@@ -120,10 +121,14 @@
   color: var(--cs-text);
 }
 
-/* 10. Responsive */
+/* 10. Responsive : full-screen sur mobile */
 @media (max-width: 768px) {
+  .chatbox-wrapper {
+    align-items: flex-start;    /* commence en haut sur mobile */
+  }
   .chatbox-container {
-    max-width: 100%;
+    max-width: 100%;            /* occupe toute la largeur */
+    height: 100vh;              /* plein écran en hauteur */
     border-radius: 0;
   }
   .cs-message-list {
