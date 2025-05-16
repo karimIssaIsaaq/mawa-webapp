@@ -1,13 +1,10 @@
-// src/ChatBox.jsx
+import React, { useState } from "react";
 import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
   Message,
   MessageInput,
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
-import { useState, useRef, useEffect } from "react";
+import { Virtuoso } from "react-virtuoso";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./ChatBox.css";
 
@@ -20,19 +17,10 @@ export default function ChatBox() {
     }
   ]);
   const [typing, setTyping] = useState(false);
-  const listRef = useRef(null);
-
-  // Scroll auto vers le bas à chaque nouveau message
-  useEffect(() => {
-    const el = listRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight;
-    }
-  }, [messages]);
 
   const email = new URLSearchParams(window.location.search).get("email") || "";
 
-  const handleSend = async (userMessage) => {
+  const handleSend = async (text) => {
     if (!email) {
       setMessages((prev) => [
         ...prev,
@@ -44,8 +32,7 @@ export default function ChatBox() {
       ]);
       return;
     }
-
-    const newMsg = { message: userMessage, sender: "user" };
+    const newMsg = { message: text, sender: "user" };
     const updated = [...messages, newMsg];
     setMessages(updated);
     setTyping(true);
@@ -69,16 +56,19 @@ export default function ChatBox() {
       if (res.status === 429) {
         setMessages((prev) => [
           ...prev,
-          { message: data.error || "⛔ Limite de messages atteinte.", sender: "ChatGPT" }
+          { message: data.error || "⛔ Limite atteinte.", sender: "ChatGPT" }
         ]);
       } else {
-        setMessages([...updated, { message: data.reply, sender: "ChatGPT" }]);
+        setMessages((prev) => [
+          ...prev,
+          { message: data.reply, sender: "ChatGPT" }
+        ]);
       }
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { message: "❌ Une erreur est survenue. Réessaie plus tard.", sender: "ChatGPT" }
+        { message: "❌ Erreur, réessaie plus tard.", sender: "ChatGPT" }
       ]);
     } finally {
       setTyping(false);
@@ -88,29 +78,33 @@ export default function ChatBox() {
   return (
     <div className="chatbox-wrapper">
       <div className="chatbox-container">
-        <MainContainer className="main">
-          <ChatContainer className="chat">
-            <MessageList
-              ref={listRef}
-              className="messages"
-              typingIndicator={
-                typing && <TypingIndicator content="Mawa est en train d’écrire..." />
-              }
-            >
-              {messages.map((msg, i) => (
-                <Message
-                  key={i}
-                  model={{
-                    message: msg.message,
-                    sender: msg.sender,
-                    sentTime: "just now"
-                  }}
-                />
-              ))}
-            </MessageList>
-            <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
-          </ChatContainer>
-        </MainContainer>
+        {/* Virtual List pour les messages */}
+        <Virtuoso
+          className="message-list"
+          data={messages}
+          followOutput="smooth"
+          components={{
+            Footer: () =>
+              typing ? (
+                <TypingIndicator content="Mawa est en train d’écrire..." />
+              ) : null
+          }}
+          itemContent={(index, msg) => (
+            <Message
+              key={index}
+              model={{
+                message: msg.message,
+                sender: msg.sender,
+                sentTime: "just now"
+              }}
+            />
+          )}
+        />
+
+        {/* Input collé en bas */}
+        <div className="input-area">
+          <MessageInput onSend={handleSend} placeholder="Pose ta question…" />
+        </div>
       </div>
     </div>
   );
