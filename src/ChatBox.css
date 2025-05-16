@@ -1,6 +1,6 @@
 /* src/ChatBox.css */
 
-/* 1. On reset tout et on supprime la barre de scroll du <body> */
+/* 1. On bloque le scroll de la page et on reset */
 html, body {
   margin: 0;
   padding: 0;
@@ -8,41 +8,41 @@ html, body {
   overflow: hidden;
 }
 
-/* 2. Wrapper inutile pour le scroll, on s’en sert juste pour centrer horizontalement */
+/* 2. Wrapper pour centrer horizontalement */
 .chat-app {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center; /* centre horizontal */
+  justify-content: center;
 }
 
-/* 3. Chat-container en position fixe, flush top→bottom */
+/* 3. Container fixe, hauteur réduite, scroll interne */
 .chat-container {
   position: fixed;
-  top: 0;              /* colle en haut */
-  bottom: 0;           /* colle en bas */
+  top: 1rem;                          /* 1rem sous le haut */
   left: 50%;
   transform: translateX(-50%);
+  width: clamp(300px, 90vw, 550px);   /* largeur responsive */
+  height: clamp(300px, 60vh, 500px);  /* hauteur réduite : min 300px, max 500px ou 60vh */
   display: flex;
   flex-direction: column;
-  width: clamp(300px, 90vw, 550px);
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   overflow: hidden;
 }
 
-/* 4. Header */
+/* 4. Header fixe */
 .chat-header {
   flex-shrink: 0;
   padding: 0.75rem 1rem;
   background: #fff;
   border-bottom: 1px solid #e5e5e5;
-  font-weight: 600;
   text-align: center;
+  font-weight: 600;
 }
 
-/* 5. Zone de messages scrollable */
+/* 5. Messages – SEUL ZONE QUI SCROLL */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -59,8 +59,8 @@ html, body {
 .message {
   max-width: 80%;
   padding: 0.75rem 1rem;
-  line-height: 1.4;
   word-break: break-word;
+  line-height: 1.4;
 }
 .message.bot {
   align-self: flex-start;
@@ -74,11 +74,10 @@ html, body {
   border-radius: 16px 16px 4px 16px;
 }
 
-/* 7. Formulaire fixe en bas */
+/* 7. Input collé en bas */
 .chat-input {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
   padding: 0.5rem;
   border-top: 1px solid #e5e5e5;
   background: #fff;
@@ -89,9 +88,7 @@ html, body {
   border: 1px solid #d1d5db;
   border-radius: 4px;
   padding: 0.5rem;
-  font-size: 1rem;
-  font-family: inherit;
-  line-height: 1.4;
+  font: inherit;
 }
 .chat-input textarea:focus {
   outline: none;
@@ -104,20 +101,28 @@ html, body {
   color: #fff;
   border-radius: 4px;
   padding: 0 1rem;
-  font-size: 1.25rem;
   cursor: pointer;
 }
 
-/* 8. Responsive mobile */
-/* garde la même position (flush top→bot), mais adapt la taille */
+/* 8. Mobile – on garde la même hauteur relative */
+.chat-container {
+  position: fixed;
+  top: 50%;                   /* centre verticalement */
+  left: 50%;                  /* centre horizontalement */
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 90vw, 550px);
+  height: clamp(350px, 70vh, 550px);  /* passe de 300–500px → 350–550px */
+  /* le reste inchangé */
+}
+
 @media (max-width: 600px) {
   .chat-container {
-    width: 100%;
-    border-radius: 0;
+    width: 95vw;
+    height: 55vh;             /* un peu plus haut que 50vh précédemment */
+    border-radius: 8px;
   }
-  .chat-input {
-    padding: 0.25rem;
-  }
+}
+
   .chat-input textarea {
     padding: 0.4rem;
     font-size: 0.9rem;
