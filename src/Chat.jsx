@@ -23,8 +23,8 @@ const theme = createTheme({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: 'clamp(280px, 90vw, 400px)',
-  height: 'calc(100vh - 1rem)',
-  margin: '1rem auto 0',
+  height: 'calc(100vh - 1rem)',    // Remplit tout l’écran moins 1rem en haut
+  margin: '1rem auto 0',           // 1rem top, auto sides, 0 bottom
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -32,14 +32,14 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
   [theme.breakpoints.down('sm')]: {
     width: '90vw',
-    height: '60vh',    // réduit la hauteur sur mobile
+    height: 'calc(100vh - 1rem)',
     margin: '1rem auto 0'
   }
 }));
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([
-    { message: 'Salam 👋 Je suis ton assistant…', sender: 'ChatGPT' }
+    { message: 'Salam 👋 Je suis ton assistant, là pour t’aider quand tu en as besoin.', sender: 'ChatGPT' }
   ]);
   const [typing, setTyping] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -55,7 +55,7 @@ export default function ChatBox() {
     if (!email) {
       setMessages(prev => [
         ...prev,
-        { message: '🔒 Connecte-toi à Shopify …', sender: 'ChatGPT' }
+        { message: '🔒 Tu dois être connecté à ton compte Shopify pour utiliser ce service.', sender: 'ChatGPT' }
       ]);
       return;
     }
@@ -92,7 +92,10 @@ export default function ChatBox() {
 
   const handleAttach = e => {
     const file = e.target.files[0];
-    if (file) console.log('Fichier attaché :', file);
+    if (file) {
+      console.log('Fichier attaché :', file);
+      // TODO : uploader ou traiter le fichier
+    }
   };
 
   const handleSubmit = e => {
@@ -106,46 +109,90 @@ export default function ChatBox() {
   return (
     <ThemeProvider theme={theme}>
       <StyledPaper elevation={3}>
-        <Box component="header" sx={{
-          p: 2,
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-          color: '#fff', fontWeight: 600, letterSpacing: 0.5
-        }}>
+        {/* HEADER */}
+        <Box
+          component="header"
+          sx={{
+            p: 2,
+            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+            color: '#fff',
+            fontWeight: 600,
+            letterSpacing: 0.5
+          }}
+        >
           Mawaia Assistant
         </Box>
-        <Box sx={{ flex: 1, overflowY: 'auto', bgcolor: '#fff', p: 2,
-                   scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
-          {messages.map((m,i) => (
-            <Message key={i} model={{ message: m.message, sentTime: 'maintenant', sender: m.sender }} />
+
+        {/* BODY */}
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: 'auto',
+            bgcolor: '#fff',
+            p: 2,
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
+          {messages.map((m, i) => (
+            <Message
+              key={i}
+              model={{
+                message: m.message,
+                sentTime: 'maintenant',
+                sender: m.sender
+              }}
+            />
           ))}
           {typing && <TypingIndicator content="Mawa est en train d’écrire…" />}
           <div ref={bottomRef} />
         </Box>
-        <Box component="form" onSubmit={handleSubmit} sx={{
-          display: 'flex', alignItems: 'center', p: 1.5,
-          background: '#fafafa', borderTop: '1px solid #e0e0e0'
-        }}>
-          <IconButton component="label" sx={{ p:1, bgcolor:'#fff', border:'1px solid #ddd', boxShadow:'0 1px 4px rgba(0,0,0,0.1)' }}>
-            <input type="file" hidden onChange={handleAttach}/>
+
+        {/* FOOTER / FORM */}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            p: 1.5,
+            background: '#fafafa',
+            borderTop: '1px solid #e0e0e0'
+          }}
+        >
+          <IconButton component="label" sx={{ p: 1, bgcolor: '#fff', border: '1px solid #ddd', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }} aria-label="Attach file">
+            <input type="file" hidden onChange={handleAttach} />
             <AttachFileIcon fontSize="small" />
           </IconButton>
+
           <TextField
             placeholder="Pose ta question…"
-            variant="outlined" multiline maxRows={4}
-            value={inputValue} onChange={e=>setInputValue(e.target.value)}
-            onKeyDown={e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); handleSubmit(e); }}}
-            sx={{
-              flex:1, mx:1, bgcolor:'#fff',
-              borderRadius: theme.shape.borderRadius,
-              boxShadow:'0 2px 8px rgba(0,0,0,0.05)',
-              '& .MuiOutlinedInput-notchedOutline':{borderColor:'#ddd'},
-              '&:hover .MuiOutlinedInput-notchedOutline':{borderColor: theme.palette.primary.main},
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline':{borderColor: theme.palette.primary.main}
+            variant="outlined"
+            multiline
+            maxRows={4}
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
             }}
-            InputProps={{ sx:{ fontFamily: theme.typography.fontFamily, fontSize:'1rem' } }}
+            sx={{
+              flex: 1,
+              mx: 1,
+              bgcolor: '#fff',
+              borderRadius: theme.shape.borderRadius,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#ddd' },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: theme.palette.primary.main },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: theme.palette.primary.main }
+            }}
+            InputProps={{ sx: { fontFamily: theme.typography.fontFamily, fontSize: '1rem' } }}
           />
-          <IconButton type="submit" sx={{ p:1, color: theme.palette.primary.main }}>
-            <SendIcon fontSize="small"/>
+
+          <IconButton type="submit" sx={{ p: 1, color: theme.palette.primary.main }} aria-label="Send">
+            <SendIcon fontSize="small" />
           </IconButton>
         </Box>
       </StyledPaper>
