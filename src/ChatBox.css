@@ -3,54 +3,58 @@
 /* 1. Variables de thème */
 :root {
   /* Couleurs principales */
-  --cs-bg: #FFFFF;           /* Fond général */
-  --cs-secondary: #2C2C2C;    /* Bulles assistant */
-  --cs-user-msg: #1ABC9C;     /* Bulles utilisateur */
-  --cs-primary: #1ABC9C;      /* Bouton envoyer / accents */
-  --cs-text: #E0E0E0;         /* Texte sur fond sombre */
-  --cs-border: #E5E7EB;          /* Couleur des séparateurs */
-  --cs-radius: 10px;             /* Rayon des coins */
+  --cs-bg: #FFFFFF;            /* Fond général corrigé */
+  --cs-secondary: #2C2C2C;     /* Bulles assistant */
+  --cs-user-msg: #1ABC9C;      /* Bulles utilisateur */
+  --cs-primary: #1ABC9C;       /* Bouton envoyer / accents */
+  --cs-text: #E0E0E0;          /* Texte sur bulles sombres */
+  --cs-border: #E5E7EB;        /* Séparateurs */
+  --cs-radius: 10px;           /* Rayon des coins */
   --cs-shadow: 0 3px 12px rgba(0,0,0,0.05);
   --cs-font: 'Roboto', sans-serif;
 }
 
-/* 2. Wrapper centré, plein écran */
+/* 2. Wrapper plein écran, conteneur full-height pour scroll */
 .chatbox-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  align-items: stretch;      /* <- pour que le container prenne toute la hauteur */
   width: 100%;
   height: 100vh;
   background: var(--cs-bg);
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* 3. Conteneur principal du chat */
+/* 3. Conteneur principal en flex-col, full-height */
 .chatbox-container {
   width: 100%;
   max-width: 70vw;
+  height: 100%;              /* <- pour remplir le wrapper */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden;          /* garde les coins arrondis */
 }
 
-/* 4. Override des hauteurs fixes pour que ça grandisse */
+/* 4. ChatKit containers : flex pour répartir l'espace */
 .chatbox-container .cs-main-container,
-.chatbox-container .cs-chat-container,
-.chatbox-container .cs-message-list {
+.chatbox-container .cs-chat-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;                   /* prend tout l'espace disponible */
   height: auto !important;
-  max-height: 80vh;
 }
 
-/* 5. MessageList : auto-height et scroll si trop grand */
+/* 5. MessageList : flex-grow + scroll */
 .chatbox-container .cs-message-list {
+  flex: 1;                   /* occupe l'espace restant sous l'input */
   padding: 1rem;
-  overflow-y: auto;
-  flex-grow: 1;
+  overflow-y: auto;          /* active le scroll interne */
+  background: var(--cs-bg);
 }
 
 /* 6. Styles des bulles */
@@ -69,14 +73,15 @@
   box-shadow: var(--cs-shadow);
 }
 
-/* 7. Input */
+/* 7. Zone de saisie */
 .chatbox-container .cs-message-input {
-  border-top: 1px solid var(--cs-border);
   padding: 0.75rem;
+  border-top: 1px solid var(--cs-border);
   background: var(--cs-secondary);
 }
 
 .chatbox-container .cs-message-input textarea {
+  width: 100%;
   font-family: var(--cs-font);
   font-size: 1rem;
   border: 1px solid var(--cs-border);
@@ -84,6 +89,8 @@
   padding: 0.75rem;
   resize: none;
   box-shadow: var(--cs-shadow);
+  background: #fff;
+  color: #000;
 }
 
 /* 8. Bouton d’envoi */
@@ -103,7 +110,7 @@
   transform: scale(1.05);
 }
 
-/* 9. Typing indicator */
+/* 9. Indicateur de saisie */
 .chatbox-container .cs-typing-indicator {
   margin-left: 1rem;
   font-family: var(--cs-font);
@@ -111,14 +118,20 @@
   color: var(--cs-text);
 }
 
-/* 10. Responsiveness */
+/* 10. Responsive */
 @media (max-width: 768px) {
   .chatbox-wrapper {
-    padding: 0;
+    align-items: stretch;
   }
   .chatbox-container {
-    border-radius: 0;
     max-width: 100%;
     height: 100vh;
+    border-radius: 0;
+  }
+  .chatbox-container .cs-message-list {
+    padding: 0.75rem;
+  }
+  .chatbox-container .cs-message-input {
+    padding: 0.5rem;
   }
 }
