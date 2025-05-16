@@ -13,7 +13,7 @@
   --cs-font: 'Roboto', sans-serif;
 }
 
-/* 2. Wrapper : centre le chat */
+/* 2. Wrapper centré */
 .chatbox-wrapper {
   display: flex;
   justify-content: center;
@@ -24,14 +24,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-y: hidden; /* par défaut on veut éviter le scroll de la page */
+  /* empêche le “rubber-band” global sur iOS */
+  overscroll-behavior: contain;
 }
 
 /* 3. Container principal */
 .chatbox-container {
   width: 100%;
-  max-width: 400px;      
-  max-height: 80vh;      
+  max-width: 400px;
+  max-height: 80vh;
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
@@ -49,16 +50,23 @@
   min-height: 0;
 }
 
-/* 5. Liste de messages scrollable */
+/* 5. Liste de messages scrollable & fluide */
 .cs-message-list {
   flex: 1 1 auto;
   min-height: 0;
   padding: 1rem;
   overflow-y: auto;
   background: var(--cs-bg);
+
+  /* <-- AJOUTS pour fluidité -->
+     smooth scroll sur tous les navigateurs modernes
+     momentum scroll (iOS Safari / Webkit) */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
-/* 6. Bulles de messages */
+/* 6. Styles des bulles */
 .cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
@@ -76,7 +84,7 @@
   line-height: 1.4;
 }
 
-/* 7. Zone de saisie “sticky” */
+/* 7. Input “sticky” */
 .cs-message-input {
   position: sticky;
   bottom: 0;
@@ -125,25 +133,25 @@
   color: var(--cs-text);
 }
 
-/* 10. Responsive mobile : on désactive le scroll interne */
+/* 10. Responsive mobile : scroll natif de la page pour beaucoup de messages */
 @media (max-width: 768px) {
   .chatbox-wrapper {
-    align-items: flex-start;   /* le container commence en haut */
-    overflow-y: auto;          /* on laisse défiler la page */
+    align-items: flex-start;
+    overflow-y: auto;
   }
   .chatbox-container {
     max-width: 100%;
-    max-height: none;          /* plus de limite de hauteur */
-    margin: 1rem 0;            /* espace haut/bas */
+    max-height: none;
+    margin: 1rem 0;
     border-radius: var(--cs-radius);
   }
   .cs-message-list {
-    overflow-y: visible;       /* plus de scroll interne */
+    overflow-y: visible;
     height: auto;
     padding: 0.75rem;
   }
   .cs-message-input {
-    position: static;          /* redevient dans le flux */
+    position: static;
     padding: 0.5rem;
   }
 }
