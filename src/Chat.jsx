@@ -23,7 +23,7 @@ const theme = createTheme({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: 'clamp(280px, 90vw, 400px)',
-  height: 'calc(100vh - 1rem)',    // Remplit tout l’écran moins 1rem en haut
+  height: 'calc(100vh - 1rem)',    // full height minus top margin
   margin: '1rem auto 0',           // 1rem top, auto sides, 0 bottom
   display: 'flex',
   flexDirection: 'column',
@@ -32,7 +32,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
   [theme.breakpoints.down('sm')]: {
     width: '90vw',
-    height: 'calc(100vh - 1rem)',
+    height: 'auto',               // let it grow up to…
+    maxHeight: '60vh',            // …60% of viewport height on mobile
     margin: '1rem auto 0'
   }
 }));
@@ -94,7 +95,7 @@ export default function ChatBox() {
     const file = e.target.files[0];
     if (file) {
       console.log('Fichier attaché :', file);
-      // TODO : uploader ou traiter le fichier
+      // TODO: uploader ou traiter le fichier
     }
   };
 
@@ -160,7 +161,16 @@ export default function ChatBox() {
             borderTop: '1px solid #e0e0e0'
           }}
         >
-          <IconButton component="label" sx={{ p: 1, bgcolor: '#fff', border: '1px solid #ddd', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }} aria-label="Attach file">
+          <IconButton
+            component="label"
+            sx={{
+              p: 1,
+              bgcolor: '#fff',
+              border: '1px solid #ddd',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
+            }}
+            aria-label="Attach file"
+          >
             <input type="file" hidden onChange={handleAttach} />
             <AttachFileIcon fontSize="small" />
           </IconButton>
