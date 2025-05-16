@@ -1,57 +1,27 @@
-// src/ChatBox.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import ChatInput from './ChatInput';
 import './ChatBox.css';
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([
-    { text: "Salam 👋 Je suis ton assistant, là pour t'aider quand tu en as besoin.", sender: 'bot' }
+    { text: 'Salam 👋…', sender: 'bot' }
   ]);
-  const [input, setInput] = useState('');
-  const endRef = useRef(null);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    const txt = input.trim();
-    if (!txt) return;
-    setMessages(m => [...m, { text: txt, sender: 'user' }]);
-    setInput('');
-    setTimeout(() => {
-      setMessages(m => [...m, { text: "Voilà ma réponse 🚀", sender: 'bot' }]);
-    }, 500);
+  const handleSend = (text) => {
+    // ajoute ton message et appelle l’API…
+    setMessages(prev => [...prev, { text, sender: 'user' }]);
   };
 
   return (
-    <div className="chat-app">
-      <div className="chat-container">
-        <div className="chat-header">Assistant</div>
-        <div className="chat-messages">
-          {messages.map((m,i) => (
-            <div key={i} className={`message ${m.sender}`}>
-              {m.text}
-            </div>
-          ))}
-          <div ref={endRef} />
-        </div>
-        <form className="chat-input" onSubmit={handleSubmit}>
-          <textarea
-            rows={1}
-            placeholder="Tapez votre message…"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-          <button type="submit" aria-label="Envoyer">➤</button>
-        </form>
+    <div className="chat-container">
+      {/* … header + zone messages scrollable … */}
+      <div className="chat-messages">
+        {messages.map((m,i) => (
+          <div key={i} className={`message ${m.sender}`}>{m.text}</div>
+        ))}
       </div>
+      {/* insert the custom ChatGPT‐style input here */}
+      <ChatInput onSend={handleSend} />
     </div>
   );
 }

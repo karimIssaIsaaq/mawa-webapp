@@ -1,0 +1,85 @@
+/* wrapper et fixation en bas (intègre-le dans ton .chat-container) */
+.chatgpt-input-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+/* bouton + à gauche */
+.chatgpt-action-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  margin-right: 8px;
+}
+
+/* textarea auto-sizing, sans scroll, avec placeholder */
+.chatgpt-textarea {
+  flex: 1;
+  resize: none;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  padding: 8px 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  font-family: inherit;
+  color: #111827;
+  background: #f9fafb;
+  transition: border-color 0.2s;
+  min-height: 38px;
+  max-height: 150px;
+}
+
+/* focus styling */
+.chatgpt-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: #ffffff;
+}
+
+/* bouton envoyer, désactivé par défaut */
+.chatgpt-send-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: default;
+  padding: 4px 8px;
+  margin-left: 8px;
+}
+
+/* active state */
+.chatgpt-send-button.enabled {
+  color: #2563eb;
+  cursor: pointer;
+}
+
+/* Hover pour le bouton actif */
+.chatgpt-send-button.enabled:hover {
+  color: #1e40af;
+}
+
+/* Responsive mobile : réduits les paddings et la font-size */
+@media (max-width: 600px) {
+  .chatgpt-input-wrapper {
+    padding: 6px;
+  }
+  .chatgpt-action-button,
+  .chatgpt-send-button {
+    font-size: 18px;
+    padding: 3px 6px;
+  }
+  .chatgpt-textarea {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-height: 32px;
+  }
+}
