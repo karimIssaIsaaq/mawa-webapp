@@ -7,7 +7,7 @@ import {
   MessageInput,
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./ChatBox.css";
 
@@ -19,6 +19,14 @@ export default function ChatBox() {
     }
   ]);
   const [typing, setTyping] = useState(false);
+  const messageListRef = useRef(null);
+
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollToBottom();
+    }
+  }, [messages]);
 
   const email = new URLSearchParams(window.location.search).get("email") || "";
   const handleSend = async (userMessage) => {
@@ -33,17 +41,13 @@ export default function ChatBox() {
       return;
     }
 
-    const newMessage = {
-      message: userMessage,
-      sender: "user"
-    };
-
-    const newMessages = [...messages, newMessage];
+    const newMsg = { message: userMessage, sender: "user" };
+    const newMessages = [...messages, newMsg];
     setMessages(newMessages);
     setTyping(true);
 
     try {
-      const response = await fetch("https://mawaia-back-production.up.railway.app/api/chat", {
+      const res = await fetch("https://mawaia-back-production.up.railway.app/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -54,26 +58,22 @@ export default function ChatBox() {
           }))
         })
       });
+      const data = await res.json();
 
-      const data = await response.json();
-
-      if (response.status === 429) {
+      if (res.status === 429) {
         setMessages((prev) => [
           ...prev,
           { message: data.error || "⛔ Limite de messages atteinte.", sender: "ChatGPT" }
         ]);
       } else {
-        setMessages([
-          ...newMessages,
-          { message: data.reply, sender: "ChatGPT" }
-        ]);
+        setMessages([...newMessages, { message: data.reply, sender: "ChatGPT" }]);
       }
-    } catch (error) {
+    } catch (err) {
       setMessages((prev) => [
         ...prev,
         { message: "❌ Une erreur est survenue. Réessaie plus tard.", sender: "ChatGPT" }
       ]);
-      console.error("Erreur lors de l'envoi du message:", error);
+      console.error(err);
     } finally {
       setTyping(false);
     }
@@ -85,6 +85,8 @@ export default function ChatBox() {
         <MainContainer>
           <ChatContainer>
             <MessageList
+              ref={messageListRef}
+              scrollBehavior="smooth"
               typingIndicator={
                 typing ? <TypingIndicator content="Mawa est en train d’écrire..." /> : null
               }
