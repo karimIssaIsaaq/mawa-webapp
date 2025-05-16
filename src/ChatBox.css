@@ -1,6 +1,6 @@
 /* src/ChatBox.css */
 
-/* 1. Variables de thème */
+/* 1. Palette sérieuse */
 :root {
   --cs-bg: #FFFFFF;
   --cs-secondary: #2C2C2C;
@@ -9,30 +9,28 @@
   --cs-text: #E0E0E0;
   --cs-border: #E5E7EB;
   --cs-radius: 10px;
-  --cs-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
   --cs-font: 'Roboto', sans-serif;
 }
 
-/* 2. Wrapper centré */
+/* 2. Wrapper : plein écran, centré */
 .chatbox-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--cs-bg);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* empêche le “rubber-band” global sur iOS */
-  overscroll-behavior: contain;
 }
 
-/* 3. Container principal */
+/* 3. Container : taille limitée en desktop, full-height sur mobile */
 .chatbox-container {
   width: 100%;
-  max-width: 400px;
-  max-height: 80vh;
+  max-width: 400px;     /* desktop */
+  height: 90vh;         /* desktop */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
@@ -41,33 +39,28 @@
   overflow: hidden;
 }
 
-/* 4. Flex parents pour scroll interne */
-.cs-main-container,
-.cs-chat-container {
+/* 4. Ensurer que les containers internes sont flexibles */
+.main,
+.chat {
   display: flex !important;
   flex-direction: column !important;
   flex: 1 1 auto !important;
-  min-height: 0;
+  min-height: 0;        /* CRUCIAL pour que l’enfant .messages puisse scroll */
 }
 
-/* 5. Liste de messages scrollable & fluide */
-.cs-message-list {
+/* 5. Liste des messages : scroll interne fluide */
+.messages {
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 0;        /* idem */
   padding: 1rem;
   overflow-y: auto;
-  background: var(--cs-bg);
-
-  /* <-- AJOUTS pour fluidité -->
-     smooth scroll sur tous les navigateurs modernes
-     momentum scroll (iOS Safari / Webkit) */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  background: var(--cs-bg);
 }
 
-/* 6. Styles des bulles */
-.cs-message--assistant .cs-text-bubble {
+/* 6. Bulles stylées (hérité du kit – overrides si besoin) */
+.chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
   border-radius: var(--cs-radius) var(--cs-radius) 2px var(--cs-radius);
@@ -75,8 +68,7 @@
   box-shadow: var(--cs-shadow);
   line-height: 1.4;
 }
-
-.cs-message--user .cs-text-bubble {
+.chatbox-container .cs-message--user .cs-text-bubble {
   background: var(--cs-user-msg) !important;
   color: #fff !important;
   border-radius: var(--cs-radius) var(--cs-radius) var(--cs-radius) 2px;
@@ -84,74 +76,24 @@
   line-height: 1.4;
 }
 
-/* 7. Input “sticky” */
-.cs-message-input {
-  position: sticky;
-  bottom: 0;
+/* 7. Input collé en bas */
+.chatbox-container .cs-message-input {
   flex-shrink: 0;
-  padding: 0.75rem;
   border-top: 1px solid var(--cs-border);
   background: var(--cs-secondary);
-  z-index: 10;
 }
 
-.cs-message-input textarea {
-  width: 100%;
-  font-family: var(--cs-font);
-  font-size: 1rem;
-  border: 1px solid var(--cs-border);
-  border-radius: var(--cs-radius);
-  padding: 0.75rem;
-  resize: none;
-  box-shadow: var(--cs-shadow);
-  background: #fff;
-  color: #000;
-}
-
-/* 8. Bouton envoyer */
-.cs-send-button > button {
-  background: var(--cs-primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--cs-radius);
-  padding: 0.5rem 1rem;
-  margin-left: 0.5rem;
-  cursor: pointer;
-  font-family: var(--cs-font);
-  box-shadow: var(--cs-shadow);
-  transition: transform 0.1s ease-in-out;
-}
-.cs-send-button > button:hover {
-  transform: scale(1.05);
-}
-
-/* 9. Typing indicator */
-.cs-typing-indicator {
-  margin-left: 1rem;
-  font-family: var(--cs-font);
-  font-style: italic;
-  color: var(--cs-text);
-}
-
-/* 10. Responsive mobile : scroll natif de la page pour beaucoup de messages */
+/* 8. Responsive mobile (≤768px) : full-screen & adaptatif */
 @media (max-width: 768px) {
-  .chatbox-wrapper {
-    align-items: flex-start;
-    overflow-y: auto;
-  }
   .chatbox-container {
     max-width: 100%;
-    max-height: none;
-    margin: 1rem 0;
-    border-radius: var(--cs-radius);
+    height: 100vh;    /* mobile full-height */
+    border-radius: 0;
   }
-  .cs-message-list {
-    overflow-y: visible;
-    height: auto;
+  .messages {
     padding: 0.75rem;
   }
-  .cs-message-input {
-    position: static;
+  .chatbox-container .cs-message-input {
     padding: 0.5rem;
   }
 }
