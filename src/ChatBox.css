@@ -38,32 +38,26 @@
   overflow: hidden;
 }
 
-/* 4. MainContainer full-flex */
-.chatbox-container .cs-main-container {
+/* 4. Flex parents adaptés au scroll interne */
+.cs-main-container,
+.cs-chat-container {
   display: flex !important;
   flex-direction: column !important;
   flex: 1 1 auto !important;
-  height: auto !important;
+  min-height: 0; /* CRUCIAL pour permettre à l’enfant de scroller */
 }
 
-/* 5. ChatContainer full-flex */
-.chatbox-container .cs-chat-container {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 1 auto !important;
-  height: auto !important;
-}
-
-/* 6. MessageList scrollable */
-.chatbox-container .cs-message-list {
-  flex: 1 1 auto !important;
+/* 5. Zone de messages scrollable */
+.cs-message-list {
+  flex: 1 1 auto;
+  min-height: 0;        /* CRUCIAL pour que overflow-y fonctionne */
   padding: 1rem;
-  overflow-y: auto !important;
+  overflow-y: auto;
   background: var(--cs-bg);
 }
 
-/* 7. Styles des bulles */
-.chatbox-container .cs-message--assistant .cs-text-bubble {
+/* 6. Bulles */
+.cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
   border-radius: var(--cs-radius) var(--cs-radius) 2px var(--cs-radius);
@@ -72,7 +66,7 @@
   line-height: 1.4;
 }
 
-.chatbox-container .cs-message--user .cs-text-bubble {
+.cs-message--user .cs-text-bubble {
   background: var(--cs-user-msg) !important;
   color: #fff !important;
   border-radius: var(--cs-radius) var(--cs-radius) var(--cs-radius) 2px;
@@ -80,15 +74,15 @@
   line-height: 1.4;
 }
 
-/* 8. Input fixe en bas */
-.chatbox-container .cs-message-input {
+/* 7. Input fixé en bas */
+.cs-message-input {
   flex-shrink: 0;
   padding: 0.75rem;
   border-top: 1px solid var(--cs-border);
   background: var(--cs-secondary);
 }
 
-.chatbox-container .cs-message-input textarea {
+.cs-message-input textarea {
   width: 100%;
   font-family: var(--cs-font);
   font-size: 1rem;
@@ -101,8 +95,8 @@
   color: #000;
 }
 
-/* 9. Bouton envoyer */
-.chatbox-container .cs-send-button > button {
+/* 8. Bouton envoyer */
+.cs-send-button > button {
   background: var(--cs-primary);
   color: #fff;
   border: none;
@@ -114,28 +108,28 @@
   box-shadow: var(--cs-shadow);
   transition: transform 0.1s ease-in-out;
 }
-.chatbox-container .cs-send-button > button:hover {
+.cs-send-button > button:hover {
   transform: scale(1.05);
 }
 
-/* 10. Typing indicator */
-.chatbox-container .cs-typing-indicator {
+/* 9. Typing indicator */
+.cs-typing-indicator {
   margin-left: 1rem;
   font-family: var(--cs-font);
   font-style: italic;
   color: var(--cs-text);
 }
 
-/* 11. Responsive */
+/* 10. Responsive */
 @media (max-width: 768px) {
   .chatbox-container {
     max-width: 100%;
     border-radius: 0;
   }
-  .chatbox-container .cs-message-list {
+  .cs-message-list {
     padding: 0.75rem;
   }
-  .chatbox-container .cs-message-input {
+  .cs-message-input {
     padding: 0.5rem;
   }
 }
