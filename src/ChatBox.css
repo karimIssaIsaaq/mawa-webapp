@@ -1,6 +1,4 @@
-/* === ChatBox.css === */
-
-/* 1. Reset global & blocage du scroll de la page */
+/* 1. Reset et blocage du scroll de la page */
 html, body {
   margin: 0;
   padding: 0;
@@ -8,68 +6,77 @@ html, body {
   height: 100vh;
   overflow: hidden;
   box-sizing: border-box;
+  background: #F9FAFB;
 }
 
 /* 2. Header */
 .chat-header {
-  padding: 16px;
-  background: linear-gradient(135deg, #4A90E2, #50E3C2);
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 600;
+  padding: 20px;
+  background: linear-gradient(135deg, #1f2937, #3b82f6);
+  color: #FFF;
+  font-size: 1.5rem;
+  font-weight: 700;
   text-align: center;
 }
 
-/* 3. Body scrollable */
+/* 3. Corps — seule zone scrollable */
 .chat-body {
   flex: 1;
-  padding: 16px;
-  background: #F9FAFB;
+  padding: 32px;
+  background: #FFF;
   overflow-y: auto;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
+
+/* Bulles */
 .cs-message--assistant .cs-text-bubble {
-  background: #E1E4EB !important;
+  background: #E5E7EB !important;
   color: #1F2937 !important;
 }
 .cs-message--user .cs-text-bubble {
-  background: #0B93F6 !important;
-  color: #FFFFFF !important;
+  background: #3b82f6 !important;
+  color: #FFF !important;
 }
 
 /* 4. Footer / Input */
 .chat-footer {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: #FFFFFF;
+  padding: 20px 32px;
+  background: #FFF;
   border-top: 1px solid #E5E7EB;
-}
-.attach-btn, .send-btn {
-  color: #4A90E2;
 }
 .chat-input-field {
   flex: 1;
-  margin: 0 8px;
+  margin-right: 12px;
 }
 .chat-textarea {
-  background: #F0F2F5 !important;
-  border-radius: 16px !important;
-  padding: 8px 12px !important;
+  background: #F3F4F6 !important;
+  border-radius: 24px !important;
+  padding: 16px !important;
+  font-size: 1.1rem !important;
 }
 
-/* 5. Responsive tablettes */
+/* Send button */
+.send-btn {
+  color: #3b82f6;
+}
+.send-btn.Mui-disabled {
+  color: #C1C7CD;
+}
+
+/* 5. Tablettes */
 @media (max-width: 768px) {
-  .chat-body { padding: 12px; }
-  .chat-footer { padding: 10px 12px; }
-  .chat-input-field { margin: 0 6px; }
+  .chat-header { padding: 16px; font-size: 1.3rem; }
+  .chat-body { padding: 24px; }
+  .chat-footer { padding: 16px 24px; }
+  .chat-input-field { margin-right: 8px; }
 }
 
-/* 6. Responsive mobiles */
+/* 6. Mobiles */
 @media (max-width: 480px) {
-  .chat-header { padding: 12px; font-size: 1rem; }
-  .chat-body { padding: 8px; }
-  .chat-footer { padding: 8px 10px; }
-  .chat-input-field { margin: 0 4px; }
+  .chat-header { padding: 12px; font-size: 1.1rem; }
+  .chat-body { padding: 16px; }
+  .chat-footer { padding: 12px 16px; }
+  .chat-input-field { margin-right: 6px; }
 }

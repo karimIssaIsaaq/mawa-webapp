@@ -9,34 +9,33 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import SendIcon from '@mui/icons-material/Send';
 import './ChatBox.css';
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#4A90E2' },
-    secondary: { main: '#50E3C2' },
-    background: { default: '#F9FAFB' }
+    primary: { main: '#1f2937' },
+    secondary: { main: '#3b82f6' },
+    background: { default: '#f3f4f6' }
   },
-  shape: { borderRadius: 20 },
+  shape: { borderRadius: 24 },
   typography: { fontFamily: '"Inter", sans-serif' }
 });
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  width: 'clamp(300px, 90vw, 600px)',
-  height: 'clamp(400px, 85vh, 800px)',
+  width: 'clamp(320px, 60vw, 600px)',
+  height: '100vh',
   display: 'flex',
   flexDirection: 'column',
-  margin: 'auto',
+  margin: '0 auto',
   borderRadius: theme.shape.borderRadius,
-  boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+  boxShadow: '0 12px 48px rgba(0,0,0,0.08)',
   overflow: 'hidden',
-  backgroundColor: '#fff',
   [theme.breakpoints.down('sm')]: {
-    width: '95vw',
-    height: '95vh',
-    margin: 'auto'
+    width: '100vw',
+    height: '100vh',
+    margin: 0,
+    borderRadius: 0
   }
 }));
 
@@ -56,8 +55,7 @@ export default function ChatBox() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const email =
-    new URLSearchParams(window.location.search).get('email') || '';
+  const email = new URLSearchParams(window.location.search).get('email') || '';
 
   const handleSend = async (text) => {
     if (!email) {
@@ -71,12 +69,8 @@ export default function ChatBox() {
       ]);
       return;
     }
-
-    // 1) Ajout du message utilisateur
     setMessages((prev) => [...prev, { message: text, sender: 'user' }]);
     setTyping(true);
-
-    // 2) Appel au back
     try {
       const res = await fetch(
         'https://mawaia-back-production.up.railway.app/api/chat',
@@ -109,7 +103,7 @@ export default function ChatBox() {
           }
         ]);
       }
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         { message: '❌ Erreur réseau, réessaie plus tard.', sender: 'assistant' }
@@ -129,13 +123,13 @@ export default function ChatBox() {
 
   return (
     <ThemeProvider theme={theme}>
-      <StyledPaper elevation={3}>
+      <StyledPaper elevation={4}>
         {/* HEADER */}
         <Box component="header" className="chat-header">
           Mawaia Assistant
         </Box>
 
-        {/* BODY */}
+        {/* MESSAGES */}
         <Box className="chat-body">
           {messages.map((m, i) => (
             <Message
@@ -151,12 +145,8 @@ export default function ChatBox() {
           <div ref={bottomRef} />
         </Box>
 
-        {/* FOOTER / FORM */}
+        {/* INPUT */}
         <Box component="form" onSubmit={handleSubmit} className="chat-footer">
-          <IconButton component="label" className="attach-btn">
-            <input type="file" hidden />
-            <AttachFileIcon />
-          </IconButton>
           <TextField
             className="chat-input-field"
             placeholder="Pose ta question…"
@@ -172,7 +162,7 @@ export default function ChatBox() {
             className="send-btn"
             disabled={!inputValue.trim()}
           >
-            <SendIcon />
+            <SendIcon fontSize="small" />
           </IconButton>
         </Box>
       </StyledPaper>
