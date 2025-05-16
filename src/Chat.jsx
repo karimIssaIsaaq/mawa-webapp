@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Message,
   MessageInput,
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
-import { Virtuoso } from "react-virtuoso";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./ChatBox.css";
 
@@ -17,6 +16,12 @@ export default function ChatBox() {
     }
   ]);
   const [typing, setTyping] = useState(false);
+  const bottomRef = useRef(null);
+
+  // scroll page vers le bas à chaque nouveau message
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const email = new URLSearchParams(window.location.search).get("email") || "";
 
@@ -32,11 +37,12 @@ export default function ChatBox() {
       ]);
       return;
     }
-    const newMsg = { message: text, sender: "user" };
-    const updated = [...messages, newMsg];
-    setMessages(updated);
+
+    // 1) on ajoute le msg user
+    setMessages((prev) => [...prev, { message: text, sender: "user" }]);
     setTyping(true);
 
+    // 2) on appelle l'API
     try {
       const res = await fetch(
         "https://mawaia-back-production.up.railway.app/api/chat",
@@ -45,27 +51,23 @@ export default function ChatBox() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email,
-            messages: updated.map((m) => ({
-              role: m.sender === "ChatGPT" ? "assistant" : "user",
-              content: m.message
-            }))
+            messages: [...messages, { message: text, sender: "user" }].map(
+              (m) => ({
+                role: m.sender === "ChatGPT" ? "assistant" : "user",
+                content: m.message
+              })
+            )
           })
         }
       );
       const data = await res.json();
-      if (res.status === 429) {
-        setMessages((prev) => [
-          ...prev,
-          { message: data.error || "⛔ Limite atteinte.", sender: "ChatGPT" }
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { message: data.reply, sender: "ChatGPT" }
-        ]);
-      }
-    } catch (err) {
-      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        res.status === 429
+          ? { message: data.error || "⛔ Limite atteinte.", sender: "ChatGPT" }
+          : { message: data.reply, sender: "ChatGPT" }
+      ]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         { message: "❌ Erreur, réessaie plus tard.", sender: "ChatGPT" }
@@ -76,36 +78,37 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="chatbox-wrapper">
-      <div className="chatbox-container">
-        {/* Virtual List pour les messages */}
-        <Virtuoso
-          className="message-list"
-          data={messages}
-          followOutput="smooth"
-          components={{
-            Footer: () =>
-              typing ? (
-                <TypingIndicator content="Mawa est en train d’écrire..." />
-              ) : null
-          }}
-          itemContent={(index, msg) => (
-            <Message
-              key={index}
-              model={{
-                message: msg.message,
-                sender: msg.sender,
-                sentTime: "just now"
-              }}
-            />
-          )}
-        />
+    <>
+      <div className="chatbox-wrapper">
+        <div className="chatbox-container">
+          <div className="messages-container">
+            {messages.map((m, i) => (
+              <Message
+                key={i}
+                model={{
+                  message: m.message,
+                  sender: m.sender,
+                  sentTime: "just now"
+                }}
+              />
+            ))}
 
-        {/* Input collé en bas */}
-        <div className="input-area">
-          <MessageInput onSend={handleSend} placeholder="Pose ta question…" />
+            {typing && (
+              <TypingIndicator className="typing-indicator">
+                Mawa est en train d’écrire…
+              </TypingIndicator>
+            )}
+
+            {/* Ancre pour scrollIntoView */}
+            <div ref={bottomRef} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Input fixé en bas du viewport */}
+      <div className="input-fixed">
+        <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
+      </div>
+    </>
   );
 }

@@ -1,87 +1,87 @@
-/* 1. Variables de thème */
+/* 1. Palette sérieuse */
 :root {
   --cs-bg: #ffffff;
-  --cs-secondary: #2c2c2c;
-  --cs-user-msg: #1abc9c;
-  --cs-primary: #1abc9c;
-  --cs-text: #e0e0e0;
+  --cs-assistant: #2c2c2c;
+  --cs-user: #1abc9c;
+  --cs-text-light: #e0e0e0;
   --cs-border: #e5e7eb;
   --cs-radius: 10px;
   --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-  --cs-font: "Roboto", sans-serif;
+  --cs-font: 'Roboto', sans-serif;
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* 2. Wrapper plein écran, centré */
+/* 2. Wrapper centré, page scrollable naturellement */
 .chatbox-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 400px;       /* desktop */
+  margin: 1rem auto;
   background: var(--cs-bg);
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  padding-bottom: 80px;   /* laisse de la place pour l’input */
 }
 
-/* 3. Container chat : fixe en desktop, full-screen en mobile */
+/* 3. Container des messages (pas de scroll interne) */
 .chatbox-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 400px;      /* largeur desktop */
-  height: 80vh;          /* hauteur desktop */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
   overflow: hidden;
 }
-@media (max-width: 768px) {
-  .chatbox-container {
-    max-width: 100%;
-    height: 100vh;      /* plein écran mobile */
-    border-radius: 0;
-  }
-}
 
-/* 4. VirtualList (react-virtuoso) pour les messages */
-.message-list {
-  flex: 1;
+/* 4. Zone messages : défile via scroll de la page */
+.messages-container {
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
-  overflow: hidden;              /* Virtuoso gère le scroll */
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* 5. Styling des bulles (héritage Chat UI Kit) */
-.cs-message--assistant .cs-text-bubble {
-  background: var(--cs-secondary) !important;
-  color: var(--cs-text) !important;
+/* 5. Bulles Chat UI Kit overrides */
+.chatbox-container .cs-message--assistant .cs-text-bubble {
+  background: var(--cs-assistant) !important;
+  color: var(--cs-text-light) !important;
   border-radius: var(--cs-radius) var(--cs-radius) 2px var(--cs-radius);
   font-family: var(--cs-font);
   box-shadow: var(--cs-shadow);
-  line-height: 1.4;
+  margin-bottom: 0.75rem;
 }
-.cs-message--user .cs-text-bubble {
-  background: var(--cs-user-msg) !important;
+.chatbox-container .cs-message--user .cs-text-bubble {
+  background: var(--cs-user) !important;
   color: #fff !important;
   border-radius: var(--cs-radius) var(--cs-radius) var(--cs-radius) 2px;
   font-family: var(--cs-font);
-  line-height: 1.4;
+  margin-bottom: 0.75rem;
 }
 
-/* 6. Zone de saisie collée en bas */
-.input-area {
-  flex-shrink: 0;
-  border-top: 1px solid var(--cs-border);
-  background: var(--cs-secondary);
-  padding: 0.75rem;
-}
-.input-area .cs-message-input textarea {
+/* 6. TypingIndicator spacing */
+.typing-indicator {
+  margin: 0.5rem 0;
+  font-style: italic;
+  color: var(--cs-text-light);
   font-family: var(--cs-font);
 }
 
-/* 7. TypingIndicator */
-.typing-indicator {
-  margin-bottom: 0.5rem;
+/* 7. Input fixe en bas */
+.input-fixed {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom, 0);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  background: var(--cs-assistant);
+  border-top: 1px solid var(--cs-border);
+  padding: 0.5rem 0;
+  z-index: 100;
+}
+
+/* 8. Responsive mobile */
+@media (max-width: 768px) {
+  .chatbox-wrapper {
+    max-width: 100%;
+    margin: 0.5rem 0;
+    padding-bottom: 60px;
+  }
+  .input-fixed {
+    padding: 0.25rem 0;
+  }
 }
