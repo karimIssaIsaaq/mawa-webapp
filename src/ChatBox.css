@@ -10,7 +10,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* 2. Wrapper pour centrer le chat horizontalement & verticalement */
+/* 2. Wrapper pour centrer horizontalement & verticalement */
 .chat-app {
   display: flex;
   justify-content: center;
@@ -19,11 +19,11 @@ html, body {
   height: 100%;
 }
 
-/* 3. Container principal — flush top/bottom, width responsive */
+/* 3. Container principal — fixé, flush top & bottom, width responsive */
 .chat-container {
   position: fixed;
-  top: 5px;
-  bottom: 5px;
+  top: 5px;                    /* 5px sous le haut (ou 0 si tu veux flush top aussi) */
+  bottom: 0;                   /* flush bottom, plus de marge */
   left: 50%;
   transform: translateX(-50%);
   width: clamp(280px, 90vw, 450px);
@@ -43,9 +43,10 @@ html, body {
   border-bottom: 1px solid #e5e5e5;
   text-align: center;
   font-weight: 600;
+  font-size: 1rem;
 }
 
-/* 5. Zone de messages — seule zone scrollable */
+/* 5. Zone de messages — SEULE zone scrollable */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -88,12 +89,9 @@ html, body {
 }
 .chat-input textarea {
   flex: 1;
-  /* empêche le textarea de grandir au-delà du conteneur */
   min-width: 0;
   max-width: 100%;
   width: auto;
-  box-sizing: border-box;
-
   resize: none;
   border: 1px solid #d1d5db;
   border-radius: 4px;
@@ -117,11 +115,12 @@ html, body {
   cursor: pointer;
 }
 
-/* 8. Mobile — flush et un peu plus grand */
+/* 8. Adaptation mobile — flush bottom, chat un peu plus grand */
 @media (max-width: 600px) {
   .chat-container {
     width: 95vw;
-    height: 65vh;
+    top: 5px;
+    bottom: 0;          /* flush bottom */
     border-radius: 4px;
   }
   .chat-messages {
