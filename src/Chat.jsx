@@ -22,19 +22,19 @@ const theme = createTheme({
 });
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  width: 'clamp(280px, 90vw, 400px)',
-  height: 'calc(100vh - 1rem)',    // full height minus top margin
-  margin: '1rem auto 0',           // 1rem top, auto sides, 0 bottom
+  // on agrandit le max-width et la hauteur desktop
+  width: 'clamp(350px, 90vw, 600px)',
+  height: 'calc(100vh - 2rem)',    // écran plein moins 2 rem de marge haut/bas
+  margin: '1rem auto',             // 1rem top & bottom, auto sides
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
   borderRadius: theme.shape.borderRadius,
   boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
   [theme.breakpoints.down('sm')]: {
-    width: '90vw',
-    height: 'auto',               // let it grow up to…
-    maxHeight: '60vh',            // …60% of viewport height on mobile
-    margin: '1rem auto 0'
+    width: '95vw',
+    height: '80vh',                // plus grand sur mobile
+    margin: '1rem auto'
   }
 }));
 
@@ -52,7 +52,7 @@ export default function ChatBox() {
 
   const email = new URLSearchParams(window.location.search).get('email') || '';
 
-  const handleSend = async (text) => {
+  const handleSend = async text => {
     if (!email) {
       setMessages(prev => [
         ...prev,
@@ -93,10 +93,7 @@ export default function ChatBox() {
 
   const handleAttach = e => {
     const file = e.target.files[0];
-    if (file) {
-      console.log('Fichier attaché :', file);
-      // TODO: uploader ou traiter le fichier
-    }
+    if (file) console.log('Fichier attaché :', file);
   };
 
   const handleSubmit = e => {
@@ -138,11 +135,7 @@ export default function ChatBox() {
           {messages.map((m, i) => (
             <Message
               key={i}
-              model={{
-                message: m.message,
-                sentTime: 'maintenant',
-                sender: m.sender
-              }}
+              model={{ message: m.message, sentTime: 'maintenant', sender: m.sender }}
             />
           ))}
           {typing && <TypingIndicator content="Mawa est en train d’écrire…" />}
@@ -161,16 +154,12 @@ export default function ChatBox() {
             borderTop: '1px solid #e0e0e0'
           }}
         >
-          <IconButton
-            component="label"
-            sx={{
-              p: 1,
-              bgcolor: '#fff',
-              border: '1px solid #ddd',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
-            }}
-            aria-label="Attach file"
-          >
+          <IconButton component="label" sx={{
+            p: 1,
+            bgcolor: '#fff',
+            border: '1px solid #ddd',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
+          }} aria-label="Attach file">
             <input type="file" hidden onChange={handleAttach} />
             <AttachFileIcon fontSize="small" />
           </IconButton>

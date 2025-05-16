@@ -1,13 +1,12 @@
 /* src/ChatBox.css */
 
-/* 1. Full-height parent so margin-top works */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* 2. Bubble styles matching the theme */
+/* Harmonisation des bulles avec le thème */
 .cs-message--assistant .cs-text-bubble {
   background: linear-gradient(135deg, #6C63FF, #3d84a8) !important;
   color: #fff !important;
