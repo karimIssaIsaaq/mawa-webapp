@@ -1,9 +1,12 @@
 // src/ChatBox.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
+  MainContainer,
+  ChatContainer,
+  MessageList,
   Message,
-  MessageInput,
-  TypingIndicator
+  TypingIndicator,
+  MessageInput
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./ChatBox.css";
@@ -17,12 +20,6 @@ export default function ChatBox() {
     }
   ]);
   const [typing, setTyping] = useState(false);
-  const bottomRef = useRef(null);
-
-  // Au nouveau message, scroll tout en bas
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const email = new URLSearchParams(window.location.search).get("email") || "";
 
@@ -49,12 +46,12 @@ export default function ChatBox() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email,
-            messages: messages
-              .concat({ message: text, sender: "user" })
-              .map((m) => ({
+            messages: [...messages, { message: text, sender: "user" }].map(
+              (m) => ({
                 role: m.sender === "ChatGPT" ? "assistant" : "user",
                 content: m.message
-              }))
+              })
+            )
           })
         }
       );
@@ -76,28 +73,32 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="chatbox-wrapper">
-      <div className="chatbox-container">
-        <div className="messages-area">
-          {messages.map((m, i) => (
-            <Message
-              key={i}
-              model={{ message: m.message, sender: m.sender, sentTime: "now" }}
-            />
-          ))}
-
-          {typing && (
-            <TypingIndicator className="typing-indicator">
-              Mawa est en train d’écrire…
-            </TypingIndicator>
-          )}
-
-          <div ref={bottomRef} />
-        </div>
-        <div className="input-area">
-          <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
-        </div>
-      </div>
+    <div className="chat-wrapper">
+      <MainContainer>
+        <ChatContainer>
+          <MessageList
+            typingIndicator={
+              typing ? <TypingIndicator content="Mawa écrit…" /> : null
+            }
+          >
+            {messages.map((m, i) => (
+              <Message
+                key={i}
+                model={{
+                  message: m.message,
+                  sentTime: "maintenant",
+                  sender: m.sender
+                }}
+              />
+            ))}
+          </MessageList>
+          <MessageInput
+            placeholder="Pose ta question…"
+            onSend={handleSend}
+            attachButton
+          />
+        </ChatContainer>
+      </MainContainer>
     </div>
   );
 }

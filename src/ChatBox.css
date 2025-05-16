@@ -1,108 +1,36 @@
 /* src/ChatBox.css */
 
-/* 1. Variables : palette + dimensions */
+/* 1. Variables : largeur responsive du chat */
 :root {
-  /* Couleurs */
-  --cs-bg: #ffffff;
-  --cs-assistant: #2c2c2c;
-  --cs-user: #1abc9c;
-  --cs-text-light: #e0e0e0;
-  --cs-border: #e5e7eb;
-  --cs-radius: 10px;
-  --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-  --cs-font: "Roboto", sans-serif;
-
-  /* Tailles chat */
-  --chat-width: clamp(280px, 90vw, 380px);
-  --chat-height-desktop: clamp(300px, 50vh, 600px);
-  /* Hauteur mobile réduite : min 200px, max 40vh, ideal 30vh */
-  --chat-height-mobile: clamp(200px, 30vh, 40vh);
+  --chat-wrapper-width: clamp(280px, 90vw, 380px);
 }
 
-/* 2. Reset global */
-* {
-  box-sizing: border-box;
+/* 2. Reset minimal + full-height sur html/body */
+html,
+body {
+  height: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* 3. Wrapper centré */
-.chatbox-wrapper {
-  width: var(--chat-width);
-  margin: 0 auto;                    /* centre horizontalement */
-  height: var(--chat-height-desktop);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* 3. Wrapper du chat (MainContainer) */
+.chat-wrapper {
+  width: var(--chat-wrapper-width);
+  height: 100vh;      /* occupe tout l’écran verticalement */
+  margin: 0 auto;     /* centré horizontalement sur desktop */
 }
 
-/* 4. Container chat */
-.chatbox-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background: var(--cs-bg);
-  border-radius: var(--cs-radius);
-  box-shadow: var(--cs-shadow);
-  overflow: hidden;
-}
+/* 4. Le Chat UI Kit (MainContainer, ChatContainer, etc.) */
+/*    Les styles de @chatscope/chat-ui-kit-styles sont importés */
+/*    dans ton JS avec :                          */
+/*    import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css"; */
+/*    Tu n’as donc pas besoin de les dupliquer ici. */
 
-/* 5. Zone messages – scroll interne */
-.messages-area {
-  flex: 1;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding: 1rem;
-  background: var(--cs-bg);
-}
-
-/* 6. Bulles (override Chat UI Kit) */
-.chatbox-container .cs-message--assistant .cs-text-bubble {
-  background: var(--cs-assistant) !important;
-  color: var(--cs-text-light) !important;
-  border-radius: var(--cs-radius) var(--cs-radius) 2px var(--cs-radius);
-  font-family: var(--cs-font);
-  box-shadow: var(--cs-shadow);
-  margin-bottom: 0.5rem;
-}
-.chatbox-container .cs-message--user .cs-text-bubble {
-  background: var(--cs-user) !important;
-  color: #fff !important;
-  border-radius: var(--cs-radius) var(--cs-radius) var(--cs-radius) 2px;
-  font-family: var(--cs-font);
-  margin-bottom: 0.5rem;
-}
-
-/* 7. TypingIndicator spacing */
-.typing-indicator {
-  margin-bottom: 0.5rem;
-  font-style: italic;
-  color: var(--cs-text-light);
-  font-family: var(--cs-font);
-}
-
-/* 8. Input collé en bas */
-.input-area {
-  flex-shrink: 0;
-  border-top: 1px solid var(--cs-border);
-  background: var(--cs-assistant);
-  padding: 0.5rem;
-}
-
-/* 9. Mobile : block beaucoup plus petit */
+/* 5. Responsive mobile : plein écran horizontal */
 @media (max-width: 768px) {
-  .chatbox-wrapper {
-    width: 100%;                       /* plein écran horizontal */
-    height: var(--chat-height-mobile); /* hauteur réduite */
-    margin: 0 auto;                    /* centré horizontalement */
-    border-radius: 0;                  /* coins carrés si tu veux */
-  }
-  .messages-area {
-    padding: 0.5rem;
-  }
-  .input-area {
-    padding: 0.25rem;
+  .chat-wrapper {
+    width: 100%;
+    margin: 0;
   }
 }
