@@ -1,12 +1,13 @@
 /* src/ChatBox.css */
 
-/* 1. Full-height & centering du body pour que margin:auto fonctionne */
+/* 1. Full-height parent pour que margin-top de 1rem prenne tout le reste */
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
-/* 2. Surcharges bulles pour jouer avec ton thème */
+/* 2. Surcharges bulles pour harmoniser au thème */
 .cs-message--assistant .cs-text-bubble {
   background: linear-gradient(135deg, #6C63FF, #3d84a8) !important;
   color: #fff !important;

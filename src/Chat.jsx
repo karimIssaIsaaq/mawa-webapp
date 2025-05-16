@@ -23,8 +23,8 @@ const theme = createTheme({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: 'clamp(280px, 90vw, 400px)',
-  height: 'clamp(400px, 80vh, 700px)',
-  margin: 'auto',                  // centré verticalement & horizontalement
+  height: 'calc(100vh - 1rem)',    // remplit jusqu’en bas
+  margin: '1rem auto 0',           // top 1rem, bottom 0
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -32,22 +32,19 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
   [theme.breakpoints.down('sm')]: {
     width: '90vw',
-    height: '80vh'
+    height: 'calc(100vh - 1rem)',
+    margin: '1rem auto 0'
   }
 }));
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([
-    {
-      message: 'Salam 👋 Je suis ton assistant, là pour t’aider quand tu en as besoin.',
-      sender: 'ChatGPT'
-    }
+    { message: 'Salam 👋 Je suis ton assistant, là pour t’aider quand tu en as besoin.', sender: 'ChatGPT' }
   ]);
   const [typing, setTyping] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const bottomRef = useRef(null);
 
-  // scroll automatique
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
