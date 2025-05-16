@@ -9,7 +9,6 @@ export default function ChatBox() {
   const [input, setInput] = useState('');
   const endRef = useRef(null);
 
-  // Scroll automatique
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -20,18 +19,17 @@ export default function ChatBox() {
     if (!txt) return;
     setMessages(m => [...m, { text: txt, sender: 'user' }]);
     setInput('');
-    // Simule la réponse
     setTimeout(() => {
       setMessages(m => [...m, { text: "Voilà ma réponse 🚀", sender: 'bot' }]);
-    }, 800);
+    }, 500);
   };
 
   return (
     <div className="chat-app">
       <div className="chat-container">
-        <div className="chat-header">ChatGPT</div>
+        <div className="chat-header">Assistant</div>
         <div className="chat-messages">
-          {messages.map((m, i) => (
+          {messages.map((m,i) => (
             <div key={i} className={`message ${m.sender}`}>
               {m.text}
             </div>
