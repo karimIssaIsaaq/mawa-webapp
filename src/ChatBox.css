@@ -1,7 +1,8 @@
 /* src/ChatBox.css */
 
-/* 1. Thème */
+/* 1. Variables : couleurs + tailles clampées */
 :root {
+  /* palette sérieuse */
   --cs-bg: #ffffff;
   --cs-assistant: #2c2c2c;
   --cs-user: #1abc9c;
@@ -9,28 +10,32 @@
   --cs-border: #e5e7eb;
   --cs-radius: 10px;
   --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-  --cs-font: 'Roboto', sans-serif;
+  --cs-font: "Roboto", sans-serif;
+
+  /* chat dimensions */
+  --chat-width: clamp(280px, 90vw, 380px);
+  --chat-height: clamp(300px, 50vh, 600px);
+  --chat-height-mobile: 100vh;
 }
+
+/* reset */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* 2. Wrapper fixe en bas, centré, sans marge haute */
+/* 2. Wrapper centré dans le flow de la page */
 .chatbox-wrapper {
-  position: fixed;
-  bottom: 1rem;              /* ← 1rem au-dessus du bas du viewport */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 350px;          /* largeur max sur desktop */
-  height: 50vh;              /* hauteur du bloc */
-  z-index: 1000;
-  padding: 0;                /* plus de padding global */
+  width: var(--chat-width);
+  margin: 0 auto;             /* centre horizontalement */
+  height: var(--chat-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 3. Container interne full-size */
+/* 3. Bloc chat en flex-col */
 .chatbox-container {
   display: flex;
   flex-direction: column;
@@ -39,20 +44,20 @@
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
-  overflow: hidden;          /* masque tout hors du container */
+  overflow: hidden;
 }
 
-/* 4. Seule cette zone scroll */
-.messages-container {
+/* 4. Zone des messages – **scroll interne** */
+.messages-area {
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding: 0.75rem;
+  padding: 1rem;
   background: var(--cs-bg);
 }
 
-/* 5. Stylisation des bulles */
+/* 5. Bulles (sur-override Chat UI Kit) */
 .chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-assistant) !important;
   color: var(--cs-text-light) !important;
@@ -69,7 +74,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* 6. TypingIndicator */
+/* 6. TypingIndicator spacing */
 .typing-indicator {
   margin-bottom: 0.5rem;
   font-style: italic;
@@ -77,8 +82,8 @@
   font-family: var(--cs-font);
 }
 
-/* 7. Input collé en bas du container */
-.input-container {
+/* 7. Input collé en bas */
+.input-area {
   flex-shrink: 0;
   border-top: 1px solid var(--cs-border);
   background: var(--cs-assistant);
@@ -88,13 +93,16 @@
 /* 8. Adaptation mobile */
 @media (max-width: 768px) {
   .chatbox-wrapper {
-    bottom: 0;              /* touche bien le bas */
-    height: 60vh;           /* un peu plus haut */
+    width: 100%;
+    height: var(--chat-height-mobile);
   }
-  .messages-container {
-    padding: 0.5rem;
+  .chatbox-container {
+    border-radius: 0;
   }
-  .input-container {
+  .messages-area {
+    padding: 0.75rem;
+  }
+  .input-area {
     padding: 0.25rem;
   }
 }

@@ -19,7 +19,7 @@ export default function ChatBox() {
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef(null);
 
-  // À chaque nouveau message, on scroll la zone des messages
+  // Au nouveau message, scroll tout en bas
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -38,10 +38,9 @@ export default function ChatBox() {
       ]);
       return;
     }
-    // on ajoute directement le message utilisateur
+    // Ajout du message utilisateur
     setMessages((prev) => [...prev, { message: text, sender: "user" }]);
     setTyping(true);
-
     try {
       const res = await fetch(
         "https://mawaia-back-production.up.railway.app/api/chat",
@@ -50,12 +49,12 @@ export default function ChatBox() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email,
-            messages: [...messages, { message: text, sender: "user" }].map(
-              (m) => ({
+            messages: messages
+              .concat({ message: text, sender: "user" })
+              .map((m) => ({
                 role: m.sender === "ChatGPT" ? "assistant" : "user",
                 content: m.message
-              })
-            )
+              }))
           })
         }
       );
@@ -79,16 +78,11 @@ export default function ChatBox() {
   return (
     <div className="chatbox-wrapper">
       <div className="chatbox-container">
-        {/* zone scrollable */}
-        <div className="messages-container">
+        <div className="messages-area">
           {messages.map((m, i) => (
             <Message
               key={i}
-              model={{
-                message: m.message,
-                sender: m.sender,
-                sentTime: "just now"
-              }}
+              model={{ message: m.message, sender: m.sender, sentTime: "now" }}
             />
           ))}
 
@@ -98,12 +92,9 @@ export default function ChatBox() {
             </TypingIndicator>
           )}
 
-          {/* ancre pour scrollIntoView */}
           <div ref={bottomRef} />
         </div>
-
-        {/* input collé en bas */}
-        <div className="input-container">
+        <div className="input-area">
           <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
         </div>
       </div>
