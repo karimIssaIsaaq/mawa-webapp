@@ -19,18 +19,19 @@
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: var(--cs-bg);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow-y: hidden; /* par défaut on veut éviter le scroll de la page */
 }
 
-/* 3. Container principal : size box, scroll interne */
+/* 3. Container principal */
 .chatbox-container {
   width: 100%;
-  max-width: 400px;      /* largeur desktop */
-  max-height: 80vh;      /* ne dépasse jamais 80% de la fenêtre */
+  max-width: 400px;      
+  max-height: 80vh;      
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
@@ -39,25 +40,25 @@
   overflow: hidden;
 }
 
-/* 4. Flex parents adaptés au scroll interne */
+/* 4. Flex parents pour scroll interne */
 .cs-main-container,
 .cs-chat-container {
   display: flex !important;
   flex-direction: column !important;
   flex: 1 1 auto !important;
-  min-height: 0;         /* essentiel pour overflow-y sur l’enfant */
+  min-height: 0;
 }
 
 /* 5. Liste de messages scrollable */
 .cs-message-list {
   flex: 1 1 auto;
-  min-height: 0;         /* idem */
+  min-height: 0;
   padding: 1rem;
-  overflow-y: auto;      /* scroll interne activé */
+  overflow-y: auto;
   background: var(--cs-bg);
 }
 
-/* 6. Bulles */
+/* 6. Bulles de messages */
 .cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
@@ -124,18 +125,25 @@
   color: var(--cs-text);
 }
 
-/* 10. Mobile (≤768px) : full-width, toujours max-height */
+/* 10. Responsive mobile : on désactive le scroll interne */
 @media (max-width: 768px) {
+  .chatbox-wrapper {
+    align-items: flex-start;   /* le container commence en haut */
+    overflow-y: auto;          /* on laisse défiler la page */
+  }
   .chatbox-container {
     max-width: 100%;
-    max-height: 80vh;    /* garde un peu d’espace en haut/bas */
-    margin: auto 0;      /* centre verticalement sur mobile */
+    max-height: none;          /* plus de limite de hauteur */
+    margin: 1rem 0;            /* espace haut/bas */
     border-radius: var(--cs-radius);
   }
   .cs-message-list {
+    overflow-y: visible;       /* plus de scroll interne */
+    height: auto;
     padding: 0.75rem;
   }
   .cs-message-input {
+    position: static;          /* redevient dans le flux */
     padding: 0.5rem;
   }
 }
