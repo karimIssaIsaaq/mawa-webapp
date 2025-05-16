@@ -22,10 +22,10 @@ const theme = createTheme({
 });
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  // on agrandit le max-width et la hauteur desktop
-  width: 'clamp(350px, 90vw, 600px)',
-  height: 'calc(100vh - 2rem)',    // écran plein moins 2 rem de marge haut/bas
-  margin: '1rem auto',             // 1rem top & bottom, auto sides
+  // largeur plus large, hauteur jusqu'au bas, sans marge inférieure
+  width: 'clamp(350px, 90vw, 700px)',
+  height: 'calc(100vh - 1rem)',
+  margin: '1rem auto 0',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -33,19 +33,23 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
   [theme.breakpoints.down('sm')]: {
     width: '95vw',
-    height: '80vh',                // plus grand sur mobile
-    margin: '1rem auto'
+    height: 'calc(100vh - 1rem)',
+    margin: '1rem auto 0'
   }
 }));
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([
-    { message: 'Salam 👋 Je suis ton assistant, là pour t’aider quand tu en as besoin.', sender: 'ChatGPT' }
+    {
+      message: 'Salam 👋 Je suis ton assistant, là pour t’aider quand tu en as besoin.',
+      sender: 'ChatGPT'
+    }
   ]);
   const [typing, setTyping] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const bottomRef = useRef(null);
 
+  // Scroll automatique à chaque nouveau message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -56,7 +60,10 @@ export default function ChatBox() {
     if (!email) {
       setMessages(prev => [
         ...prev,
-        { message: '🔒 Tu dois être connecté à ton compte Shopify pour utiliser ce service.', sender: 'ChatGPT' }
+        {
+          message: '🔒 Tu dois être connecté à ton compte Shopify pour utiliser ce service.',
+          sender: 'ChatGPT'
+        }
       ]);
       return;
     }
@@ -121,7 +128,7 @@ export default function ChatBox() {
           Mawaia Assistant
         </Box>
 
-        {/* BODY */}
+        {/* BODY scrollable */}
         <Box
           sx={{
             flex: 1,
@@ -135,7 +142,11 @@ export default function ChatBox() {
           {messages.map((m, i) => (
             <Message
               key={i}
-              model={{ message: m.message, sentTime: 'maintenant', sender: m.sender }}
+              model={{
+                message: m.message,
+                sentTime: 'maintenant',
+                sender: m.sender
+              }}
             />
           ))}
           {typing && <TypingIndicator content="Mawa est en train d’écrire…" />}
@@ -154,12 +165,16 @@ export default function ChatBox() {
             borderTop: '1px solid #e0e0e0'
           }}
         >
-          <IconButton component="label" sx={{
-            p: 1,
-            bgcolor: '#fff',
-            border: '1px solid #ddd',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
-          }} aria-label="Attach file">
+          <IconButton
+            component="label"
+            sx={{
+              p: 1,
+              bgcolor: '#fff',
+              border: '1px solid #ddd',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
+            }}
+            aria-label="Attach file"
+          >
             <input type="file" hidden onChange={handleAttach} />
             <AttachFileIcon fontSize="small" />
           </IconButton>
