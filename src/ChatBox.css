@@ -1,141 +1,34 @@
-/* src/ChatBox.css */
-
-/* 1. Reset global et suppression du scroll de la page */
+/* 1. Reset global et suppression du scroll page */
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* 2. Wrapper pour centrer horizontalement & verticalement */
-.chat-app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-/* 3. Container principal — fixé, flush top & bottom, width responsive */
+/* 2. Wrapper et containers full-screen */
+.chat-wrapper,
+.main-container,
 .chat-container {
-  position: fixed;
-  top: 5px;                    /* 5px sous le haut (ou 0 si tu veux flush top aussi) */
-  bottom: 0;                   /* flush bottom, plus de marge */
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(280px, 90vw, 450px);
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  overflow: hidden;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0;
+  padding: 0;
 }
 
-/* 4. En-tête */
-.chat-header {
-  flex-shrink: 0;
-  padding: 0.5rem 1rem;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1rem;
+/* 3. On supprime les border-radius pour que ça prenne tout l’écran */
+.chat-container {
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
-/* 5. Zone de messages — SEULE zone scrollable */
+/* 4. Zones de messages & input restent inchangées : scroll interne uniquement */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  background: #fafafa;
 }
-
-/* 6. Bulles de messages */
-.message {
-  max-width: 80%;
-  padding: 0.6rem 0.9rem;
-  line-height: 1.3;
-  word-break: break-word;
-}
-.message.bot {
-  align-self: flex-start;
-  background: #e5e5ea;
-  border-radius: 12px 12px 12px 4px;
-}
-.message.user {
-  align-self: flex-end;
-  background: #007aff;
-  color: #ffffff;
-  border-radius: 12px 12px 4px 12px;
-}
-
-/* 7. Formulaire collé en bas du container */
-.chat-input {
+.message-input {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  padding: 0.4rem;
-  border-top: 1px solid #e5e5e5;
-  background: #ffffff;
-}
-.chat-input textarea {
-  flex: 1;
-  min-width: 0;
-  max-width: 100%;
-  width: auto;
-  resize: none;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  padding: 0.4rem;
-  font-family: inherit;
-  font-size: 0.9rem;
-  line-height: 1.3;
-}
-.chat-input textarea:focus {
-  outline: none;
-  border-color: #007aff;
-}
-.chat-input button {
-  margin-left: 0.5rem;
-  background: #007aff;
-  border: none;
-  color: #ffffff;
-  border-radius: 4px;
-  padding: 0 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* 8. Adaptation mobile — flush bottom, chat un peu plus grand */
-@media (max-width: 600px) {
-  .chat-container {
-    width: 95vw;
-    top: 5px;
-    bottom: 0;          /* flush bottom */
-    border-radius: 4px;
-  }
-  .chat-messages {
-    padding: 0.6rem;
-    gap: 0.4rem;
-  }
-  .chat-input {
-    padding: 0.3rem;
-  }
-  .chat-input textarea {
-    padding: 0.35rem;
-    font-size: 0.85rem;
-  }
-  .chat-input button {
-    padding: 0 0.6rem;
-    font-size: 0.9rem;
-  }
 }
