@@ -1,6 +1,6 @@
 /* src/ChatBox.css */
 
-/* 1. Variables de thème (inchangées) */
+/* 1. Variables de thème */
 :root {
   --cs-bg: #FFFFFF;
   --cs-secondary: #2C2C2C;
@@ -13,11 +13,11 @@
   --cs-font: 'Roboto', sans-serif;
 }
 
-/* 2. Wrapper : centre le container dans la fenêtre */
+/* 2. Wrapper : centre le chat */
 .chatbox-wrapper {
   display: flex;
-  justify-content: center;    /* centre horizontalement */
-  align-items: center;        /* centre verticalement */
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
   background: var(--cs-bg);
@@ -26,11 +26,11 @@
   box-sizing: border-box;
 }
 
-/* 3. Container : taille fixe “desktop”, scroll interne pour les messages */
+/* 3. Container principal : size box, scroll interne */
 .chatbox-container {
   width: 100%;
-  max-width: 400px;            /* limite la largeur sur desktop */
-  height: 80vh;                /* hauteur “raisonnable” sur desktop */
+  max-width: 400px;      /* largeur desktop */
+  max-height: 80vh;      /* ne dépasse jamais 80% de la fenêtre */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
@@ -45,19 +45,19 @@
   display: flex !important;
   flex-direction: column !important;
   flex: 1 1 auto !important;
-  min-height: 0;               /* absolument nécessaire pour que scroll interne fonctionne */
+  min-height: 0;         /* essentiel pour overflow-y sur l’enfant */
 }
 
-/* 5. MessageList scrollable */
+/* 5. Liste de messages scrollable */
 .cs-message-list {
   flex: 1 1 auto;
-  min-height: 0;               /* idem */
+  min-height: 0;         /* idem */
   padding: 1rem;
-  overflow-y: auto;            /* active le scroll interne */
+  overflow-y: auto;      /* scroll interne activé */
   background: var(--cs-bg);
 }
 
-/* 6. Bulles de messages */
+/* 6. Bulles */
 .cs-message--assistant .cs-text-bubble {
   background: var(--cs-secondary) !important;
   color: var(--cs-text) !important;
@@ -75,12 +75,15 @@
   line-height: 1.4;
 }
 
-/* 7. Zone de saisie fixe en bas */
+/* 7. Zone de saisie “sticky” */
 .cs-message-input {
+  position: sticky;
+  bottom: 0;
   flex-shrink: 0;
   padding: 0.75rem;
   border-top: 1px solid var(--cs-border);
   background: var(--cs-secondary);
+  z-index: 10;
 }
 
 .cs-message-input textarea {
@@ -113,7 +116,7 @@
   transform: scale(1.05);
 }
 
-/* 9. Indicateur de saisie */
+/* 9. Typing indicator */
 .cs-typing-indicator {
   margin-left: 1rem;
   font-family: var(--cs-font);
@@ -121,15 +124,13 @@
   color: var(--cs-text);
 }
 
-/* 10. Responsive : full-screen sur mobile */
+/* 10. Mobile (≤768px) : full-width, toujours max-height */
 @media (max-width: 768px) {
-  .chatbox-wrapper {
-    align-items: flex-start;    /* commence en haut sur mobile */
-  }
   .chatbox-container {
-    max-width: 100%;            /* occupe toute la largeur */
-    height: 100vh;              /* plein écran en hauteur */
-    border-radius: 0;
+    max-width: 100%;
+    max-height: 80vh;    /* garde un peu d’espace en haut/bas */
+    margin: auto 0;      /* centre verticalement sur mobile */
+    border-radius: var(--cs-radius);
   }
   .cs-message-list {
     padding: 0.75rem;
