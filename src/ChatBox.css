@@ -7,32 +7,32 @@ html, body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-}
-
-/* 2. Wrapper pour centrer le chat */
-.chat-app {
-  display: flex;
-  justify-content: center; /* centré horizontalement */
-  align-items: center;     /* centré verticalement */
-  width: 100%;
-  height: 100%;
   box-sizing: border-box;
 }
 
-/* 3. Container principal — fixé, flush top/bottom, très peu de marge */
+/* 2. Wrapper pour centrer le chat horizontalement & verticalement */
+.chat-app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 3. Container principal — flush top/bottom, width responsive */
 .chat-container {
   position: fixed;
-  top: 5px;               /* 5px sous le haut de la fenêtre */
-  bottom: 5px;            /* 5px au-dessus du bas de la fenêtre */
+  top: 5px;
+  bottom: 5px;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(280px, 90vw, 400px);
+  width: clamp(280px, 90vw, 450px);
   display: flex;
   flex-direction: column;
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  overflow: hidden;       /* aucun scroll en dehors */
+  overflow: hidden;
 }
 
 /* 4. En-tête */
@@ -43,10 +43,9 @@ html, body {
   border-bottom: 1px solid #e5e5e5;
   text-align: center;
   font-weight: 600;
-  font-size: 1rem;
 }
 
-/* 5. Zone de messages — SEULE zone scrollable */
+/* 5. Zone de messages — seule zone scrollable */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -59,7 +58,7 @@ html, body {
   background: #fafafa;
 }
 
-/* 6. Bulles */
+/* 6. Bulles de messages */
 .message {
   max-width: 80%;
   padding: 0.6rem 0.9rem;
@@ -89,6 +88,12 @@ html, body {
 }
 .chat-input textarea {
   flex: 1;
+  /* empêche le textarea de grandir au-delà du conteneur */
+  min-width: 0;
+  max-width: 100%;
+  width: auto;
+  box-sizing: border-box;
+
   resize: none;
   border: 1px solid #d1d5db;
   border-radius: 4px;
@@ -112,17 +117,15 @@ html, body {
   cursor: pointer;
 }
 
-/* 8. Mobile — même flush haut/bas, blocs plus larges */
+/* 8. Mobile — flush et un peu plus grand */
 @media (max-width: 600px) {
   .chat-container {
     width: 95vw;
-    /* 5px sous le haut / 5px au-dessus du bas */
-    top: 5px;
-    bottom: 5px;
+    height: 65vh;
     border-radius: 4px;
   }
   .chat-messages {
-    padding: 0.5rem;
+    padding: 0.6rem;
     gap: 0.4rem;
   }
   .chat-input {
@@ -134,5 +137,6 @@ html, body {
   }
   .chat-input button {
     padding: 0 0.6rem;
+    font-size: 0.9rem;
   }
 }
