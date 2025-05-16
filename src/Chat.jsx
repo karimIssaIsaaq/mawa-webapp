@@ -7,53 +7,62 @@ export default function ChatBox() {
     { text: "Salam 👋 Je suis ton assistant, là pour t'aider quand tu en as besoin.", sender: 'bot' }
   ]);
   const [input, setInput] = useState('');
-  const messagesEndRef = useRef(null);
+  const endRef = useRef(null);
 
-  // Scroll to bottom on new message
+  // Scroll automatique à chaque nouveau message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = async e => {
+  // Simule envoi et réponse (remplace par ton API)
+  const handleSubmit = e => {
     e.preventDefault();
-    const text = input.trim();
-    if (!text) return;
-    // add user message
-    setMessages(msgs => [...msgs, { text, sender: 'user' }]);
+    const txt = input.trim();
+    if (!txt) return;
+    // Ajout message utilisateur
+    setMessages(m => [...m, { text: txt, sender: 'user' }]);
     setInput('');
-    // simulate bot response (replace with your API call)
+    // Réponse simulée
     setTimeout(() => {
-      setMessages(msgs => [
-        ...msgs,
-        { text: "Voilà la réponse 🚀", sender: 'bot' }
-      ]);
+      setMessages(m => [...m, { text: "Voilà ma réponse 🚀", sender: 'bot' }]);
     }, 800);
   };
 
   return (
     <div className="chat-app">
-      <div className="chat-window">
-        <div className="messages">
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              className={`message ${m.sender === 'user' ? 'user' : 'bot'}`}
-            >
+      <div className="chat-container">
+        {/* HEADER (facultatif) */}
+        <div className="chat-header">ChatGPT</div>
+
+        {/* ZONE DE MESSAGES */}
+        <div className="chat-messages">
+          {messages.map((m,i) => (
+            <div key={i} className={`message ${m.sender}`}>
               {m.text}
             </div>
           ))}
-          <div ref={messagesEndRef} />
+          <div ref={endRef} />
         </div>
-        <form className="input-form" onSubmit={handleSubmit}>
+
+        {/* FORMULAIRE FIXÉ */}
+        <form className="chat-input" onSubmit={handleSubmit}>
           <textarea
             rows={1}
             placeholder="Tapez votre message…"
             value={input}
             onChange={e => setInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
           />
-          <button type="submit">Envoyer</button>
+          <button type="submit" aria-label="Envoyer">
+            ➤
+          </button>
         </form>
       </div>
     </div>
-);
+  );
 }
