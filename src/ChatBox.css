@@ -1,4 +1,4 @@
-/* 1. Palette sérieuse */
+/* 1. Thème */
 :root {
   --cs-bg: #ffffff;
   --cs-assistant: #2c2c2c;
@@ -6,36 +6,45 @@
   --cs-text-light: #e0e0e0;
   --cs-border: #e5e7eb;
   --cs-radius: 10px;
-  --cs-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  --cs-shadow: 0 3px 12px rgba(0,0,0,0.05);
   --cs-font: 'Roboto', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* 2. Wrapper centré, page scrollable naturellement */
+/* 2. Wrapper fixe & centré dans le viewport */
 .chatbox-wrapper {
-  width: 100%;
-  max-width: 400px;       /* desktop */
-  margin: 1rem auto;
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: var(--cs-bg);
-  padding-bottom: 80px;   /* laisse de la place pour l’input */
 }
 
-/* 3. Container des messages (pas de scroll interne) */
+/* 3. Container de chat de taille fixe */
 .chatbox-container {
+  width: 100%;
+  max-width: 400px;    /* desktop */
+  height: 80vh;        /* desktop height */
   background: var(--cs-bg);
   border-radius: var(--cs-radius);
   box-shadow: var(--cs-shadow);
-  overflow: hidden;
-}
-
-/* 4. Zone messages : défile via scroll de la page */
-.messages-container {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  overflow: hidden;    /* masque tout hors du container */
 }
 
-/* 5. Bulles Chat UI Kit overrides */
+/* 4. Zone des messages – **scroll interne uniquement ici** */
+.messages-container {
+  flex: 1;                   /* prend tout l’espace restant */
+  overflow-y: auto;          /* **seule** zone scrollable */
+  scroll-behavior: smooth;   /* scroll fluide */
+  -webkit-overflow-scrolling: touch; /* momentum iOS */
+  padding: 1rem;
+  background: var(--cs-bg);
+}
+
+/* 5. Bulles (custumisation Chat UI Kit) */
 .chatbox-container .cs-message--assistant .cs-text-bubble {
   background: var(--cs-assistant) !important;
   color: var(--cs-text-light) !important;
@@ -52,36 +61,35 @@
   margin-bottom: 0.75rem;
 }
 
-/* 6. TypingIndicator spacing */
+/* 6. Indicator & ancre spacing */
 .typing-indicator {
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
   font-style: italic;
   color: var(--cs-text-light);
-  font-family: var(--cs-font);
+}
+.messages-container > div[ref] {
+  height: 1px; /* ancre invisible */
 }
 
-/* 7. Input fixe en bas */
-.input-fixed {
-  position: fixed;
-  bottom: env(safe-area-inset-bottom, 0);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 400px;
-  background: var(--cs-assistant);
+/* 7. Input collé en bas du container */
+.input-container {
+  flex-shrink: 0;
   border-top: 1px solid var(--cs-border);
-  padding: 0.5rem 0;
-  z-index: 100;
+  background: var(--cs-assistant);
+  padding: 0.5rem;
 }
 
 /* 8. Responsive mobile */
 @media (max-width: 768px) {
-  .chatbox-wrapper {
+  .chatbox-container {
     max-width: 100%;
-    margin: 0.5rem 0;
-    padding-bottom: 60px;
+    height: 100vh;    /* mobile full-screen */
+    border-radius: 0;
   }
-  .input-fixed {
-    padding: 0.25rem 0;
+  .messages-container {
+    padding: 0.75rem;
+  }
+  .input-container {
+    padding: 0.25rem;
   }
 }

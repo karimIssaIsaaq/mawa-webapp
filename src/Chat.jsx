@@ -1,3 +1,4 @@
+// src/ChatBox.jsx
 import React, { useState, useEffect, useRef } from "react";
 import {
   Message,
@@ -18,7 +19,7 @@ export default function ChatBox() {
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef(null);
 
-  // scroll page vers le bas à chaque nouveau message
+  // À chaque nouveau message, on scroll la zone des messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -37,12 +38,10 @@ export default function ChatBox() {
       ]);
       return;
     }
-
-    // 1) on ajoute le msg user
+    // on ajoute directement le message utilisateur
     setMessages((prev) => [...prev, { message: text, sender: "user" }]);
     setTyping(true);
 
-    // 2) on appelle l'API
     try {
       const res = await fetch(
         "https://mawaia-back-production.up.railway.app/api/chat",
@@ -78,37 +77,36 @@ export default function ChatBox() {
   };
 
   return (
-    <>
-      <div className="chatbox-wrapper">
-        <div className="chatbox-container">
-          <div className="messages-container">
-            {messages.map((m, i) => (
-              <Message
-                key={i}
-                model={{
-                  message: m.message,
-                  sender: m.sender,
-                  sentTime: "just now"
-                }}
-              />
-            ))}
+    <div className="chatbox-wrapper">
+      <div className="chatbox-container">
+        {/* zone scrollable */}
+        <div className="messages-container">
+          {messages.map((m, i) => (
+            <Message
+              key={i}
+              model={{
+                message: m.message,
+                sender: m.sender,
+                sentTime: "just now"
+              }}
+            />
+          ))}
 
-            {typing && (
-              <TypingIndicator className="typing-indicator">
-                Mawa est en train d’écrire…
-              </TypingIndicator>
-            )}
+          {typing && (
+            <TypingIndicator className="typing-indicator">
+              Mawa est en train d’écrire…
+            </TypingIndicator>
+          )}
 
-            {/* Ancre pour scrollIntoView */}
-            <div ref={bottomRef} />
-          </div>
+          {/* ancre pour scrollIntoView */}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* input collé en bas */}
+        <div className="input-container">
+          <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
         </div>
       </div>
-
-      {/* Input fixé en bas du viewport */}
-      <div className="input-fixed">
-        <MessageInput placeholder="Pose ta question…" onSend={handleSend} />
-      </div>
-    </>
+    </div>
   );
 }
